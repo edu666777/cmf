@@ -249,7 +249,7 @@
                             <span>${item.title}</span>
                             <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
                         </button>
-                        <div id="accordion-content-${idx}" class="accordion-content" role="region" aria-labelledby="accordion-header-${idx}">
+                        <div id="accordion-content-${idx}" class="accordion-content" role="region" aria-labelledby="accordion-header-${idx}" style="max-height:0;overflow:hidden;transition:max-height 0.5s;">
                             <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
                                 ${item.content}
                             </div>
