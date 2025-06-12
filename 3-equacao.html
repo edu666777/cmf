@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equações do 1º e 2º Graus - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of 1st and 2nd degree equations (definitions, solving methods, Bhaskara's formula). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about equations for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate equation problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Equações do 1º e 2º Graus</h1>
+            <p class="text-slate-600 mt-2">Aprenda a resolver equações e a usar a fórmula de Bhaskara!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Decifrando as Equações</h2>
+                    <p class="mb-6 content-text">Equações são a base da álgebra. Elas representam uma igualdade e nosso objetivo é encontrar o valor desconhecido (a incógnita) que torna essa igualdade verdadeira. Vamos revisar as de 1º grau e mergulhar nas de 2º grau!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Grau da Equação:</strong> O grau é definido pelo maior expoente da incógnita. Se for 1 (ex: x), é do 1º grau. Se for 2 (ex: x²), é do 2º grau.</li>
+                            <li><strong>Equação do 2º Grau:</strong> Sempre tente deixá-la na forma <span class="term-highlight">ax² + bx + c = 0</span> para identificar os coeficientes a, b e c corretamente.</li>
+                            <li><strong>Delta (Δ):</strong> O valor de Delta define quantas soluções reais a equação do 2º grau terá. Se Δ for negativo, não há solução real!</li>
+                            <li><strong>Bhaskara:</strong> A fórmula de Bhaskara é sua principal ferramenta para resolver equações do 2º grau completas.</li>
+                            <li><strong>Verifique sua Resposta:</strong> Depois de encontrar a solução, substitua o valor na equação original para ver se a igualdade funciona. É a prova real!</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva as equações abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. Equações do 1º Grau',
+                    content: 'Uma equação do 1º grau com uma incógnita tem a forma geral <span class="term-highlight">ax + b = 0</span>, onde \'a\' e \'b\' são números conhecidos e \'a\' é diferente de zero. O objetivo é isolar a incógnita \'x\'.<br><br><strong>Passos para resolver:</strong><br>1. Organize a equação, passando os termos com a incógnita para um lado da igualdade e os números para o outro. Lembre-se que ao trocar de lado, a operação inverte (o que é + vira -, e vice-versa).<br>2. Simplifique os dois lados.<br>3. Se a incógnita tiver um coeficiente (número na frente), passe-o para o outro lado dividindo.<br><br><em>Exemplo: <span class="term-highlight">4x - 8 = 12</span></em><br>1. Passar o -8 para o outro lado: <span class="term-highlight">4x = 12 + 8</span><br>2. Simplificar: <span class="term-highlight">4x = 20</span><br>3. Passar o 4 dividindo: <span class="term-highlight">x = 20 / 4</span><br>Resultado: <strong>x = 5</strong>'
+                },
+                {
+                    title: '2. Equações do 2º Grau: Definição e Coeficientes',
+                    content: 'Uma equação do 2º grau tem a forma geral <span class="term-highlight">ax² + bx + c = 0</span>, onde \'a\', \'b\' e \'c\' são números (coeficientes) e o <strong>\'a\' deve ser diferente de zero</strong> (senão, não seria do 2º grau!).<br><br><strong>Identificar os coeficientes é o primeiro passo:</strong><br><ul><li><strong>a:</strong> é o número que acompanha o x².</li><li><strong>b:</strong> é o número que acompanha o x.</li><li><strong>c:</strong> é o termo independente, o número que está sozinho.</li></ul><br><em>Exemplo: Na equação <span class="term-highlight">2x² - 8x + 6 = 0</span></em><br><ul><li>a = 2</li><li>b = -8 (o sinal vem junto!)</li><li>c = 6</li></ul><br><em>Exemplo 2: Na equação <span class="term-highlight">x² - 16 = 0</span></em><br><ul><li>a = 1 (quando não há número, é 1)</li><li>b = 0 (não há termo com x)</li><li>c = -16</li></ul>'
+                },
+                {
+                    title: '3. Discriminante (Delta - Δ)',
+                    content: 'O discriminante, representado pela letra grega Delta (<span class="term-highlight">Δ</span>), é uma parte da fórmula de resolução que nos ajuda a saber <strong>quantas soluções reais</strong> uma equação do 2º grau possui, antes mesmo de calculá-las.<br><br>A fórmula do Delta é: <span class="term-highlight">Δ = b² - 4ac</span><br><br><strong>Analisando o resultado de Δ:</strong><br><ul><li>Se <span class="term-highlight">Δ > 0</span> (Delta positivo), a equação terá <strong>duas raízes reais e diferentes</strong>.</li><li>Se <span class="term-highlight">Δ = 0</span>, a equação terá <strong>uma raiz real</strong> (ou duas raízes reais iguais).</li><li>Se <span class="term-highlight">Δ < 0</span> (Delta negativo), a equação <strong>não terá raízes reais</strong> (não há solução no conjunto dos números reais).</li></ul>'
+                },
+                {
+                    title: '4. Fórmula Resolutiva (Fórmula de Bhaskara)',
+                    content: 'Após calcular o Delta, usamos a Fórmula de Bhaskara para encontrar os valores de x (as raízes).<br><br>A fórmula é: <span class="term-highlight">x = (-b ± √Δ) / 2a</span><br><br>O "±" (mais ou menos) indica que faremos duas contas, uma usando o sinal de mais e outra usando o sinal de menos, para encontrar as duas possíveis raízes, que chamamos de x\' e x\'\'.<br><br><ul><li><strong>x\' = (-b + √Δ) / 2a</strong></li><li><strong>x\'\' = (-b - √Δ) / 2a</strong></li></ul>Se Δ=0, as duas raízes serão iguais. Se Δ<0, não continuamos o cálculo no conjunto dos reais, pois não existe raiz quadrada real de número negativo.'
+                },
+                {
+                    title: '5. Exemplo Completo: Resolvendo x² - 5x + 6 = 0',
+                    content: 'Vamos resolver a equação <span class="term-highlight">x² - 5x + 6 = 0</span>.<br><br><strong>1. Identificar coeficientes:</strong><br>a = 1, b = -5, c = 6<br><br><strong>2. Calcular Delta (Δ):</strong><br>Δ = b² - 4ac<br>Δ = (-5)² - 4 * 1 * 6<br>Δ = 25 - 24<br><strong>Δ = 1</strong>  (Como Δ > 0, sabemos que teremos duas raízes reais diferentes).<br><br><strong>3. Aplicar a Fórmula de Bhaskara:</strong><br>x = (-b ± √Δ) / 2a<br>x = (-(-5) ± √1) / (2 * 1)<br>x = (5 ± 1) / 2<br><br><strong>4. Encontrar as duas raízes:</strong><br>x\' = (5 + 1) / 2 = 6 / 2 = <strong>3</strong><br>x\'\' = (5 - 1) / 2 = 4 / 2 = <strong>2</strong><br><br><strong>Solução:</strong> O conjunto solução é S = {2, 3}.'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis (5 questões - 25%)
+                { question: "Qual a solução da equação do 1º grau: 3x - 5 = 10?", answer: "x = 5", options: ["x = 3", "x = 5", "x = 15/3", "x = 10"], explanation: "3x = 10 + 5 => 3x = 15 => x = 15 / 3 => x = 5." },
+                { question: "Na equação do 2º grau 2x² - 7x - 4 = 0, quais são os coeficientes a, b e c?", answer: "a = 2, b = -7, c = -4", options: ["a = 2, b = 7, c = 4", "a = 2, b = -7, c = -4", "a = 2, b = 7, c = -4", "a = -4, b = -7, c = 2"], explanation: "'a' acompanha x², 'b' acompanha x, e 'c' é o termo independente. Os sinais são importantes." },
+                { question: "Se o Delta (Δ) de uma equação do 2º grau é igual a zero, quantas raízes reais a equação possui?", answer: "Uma raiz real (ou duas iguais)", options: ["Nenhuma raiz real", "Uma raiz real (ou duas iguais)", "Duas raízes reais diferentes", "Infinitas raízes"], explanation: "Quando Δ = 0, a fórmula de Bhaskara resulta em um único valor para a raiz." },
+                { question: "Qual das seguintes é uma equação do 2º grau completa?", answer: "x² + 5x + 6 = 0", options: ["x² - 9 = 0", "3x² + 2x = 0", "x² + 5x + 6 = 0", "4x - 8 = 0"], explanation: "Uma equação completa tem todos os coeficientes (a, b e c) diferentes de zero." },
+                { question: "Qual o valor da expressão x² + 2x para x = -3?", answer: "3", options: ["-15", "-3", "3", "15"], explanation: "Substituindo x: (-3)² + 2*(-3) = 9 - 6 = 3." },
+                
+                // Médias (10 questões - 50%)
+                { question: "Qual o valor de Delta (Δ) para a equação x² - 8x + 12 = 0?", answer: "Δ = 16", options: ["Δ = 112", "Δ = -16", "Δ = 16", "Δ = 4"], explanation: "a=1, b=-8, c=12. Δ = b² - 4ac = (-8)² - 4*1*12 = 64 - 48 = 16." },
+                { question: "Resolva a equação do 1º grau: 5(x - 1) = 3x + 1", answer: "x = 3", options: ["x = 2", "x = -2", "x = 3", "x = 4"], explanation: "Aplicando a distributiva: 5x - 5 = 3x + 1. Isolando x: 5x - 3x = 1 + 5 => 2x = 6 => x = 3." },
+                { question: "Quais são as raízes da equação do 2º grau x² - 9 = 0?", answer: "x = 3 e x = -3", options: ["x = 3", "x = 9 e x = -9", "x = 3 e x = -3", "Não tem raiz real"], explanation: "Esta é uma equação incompleta. x² = 9 => x = ±√9 => x = 3 ou x = -3." },
+                { question: "O dobro do quadrado de um número é igual a 18. Qual é esse número?", answer: "3 ou -3", options: ["9 ou -9", "6 ou -6", "3 ou -3", "Apenas 3"], explanation: "A equação é 2x² = 18. x² = 9. Portanto, x = ±√9, o que nos dá as soluções 3 e -3." },
+                { question: "Resolva a equação do 2º grau: x² + 2x - 15 = 0.", answer: "x = 3 e x = -5", options: ["x = 5 e x = -3", "x = 15 e x = -1", "x = 3 e x = -5", "x = -15 e x = 1"], explanation: "Δ = 2² - 4*1*(-15) = 4 + 60 = 64. x = (-2 ± √64)/2 = (-2 ± 8)/2. Raízes: x'=6/2=3 e x''=-10/2=-5." },
+                { question: "Para a equação 3x² - 9x = 0, quais são as raízes?", answer: "x = 0 e x = 3", options: ["x = 3", "x = 0 e x = -3", "x = 0 e x = 3", "x = 9"], explanation: "Equação incompleta com c=0. Colocamos x em evidência: x(3x - 9) = 0. Para o produto ser zero, ou x=0 ou 3x-9=0 (que dá x=3)." },
+                { question: "Um retângulo tem área de 24 cm². Se o comprimento é (x+2) cm e a largura é x cm, qual a equação que representa o problema?", answer: "x² + 2x - 24 = 0", options: ["x² + 2x + 24 = 0", "x² + 2x - 24 = 0", "2x + 2 = 24", "x² - 2x = 24"], explanation: "Área = comprimento * largura. x(x+2) = 24 => x² + 2x = 24 => x² + 2x - 24 = 0." },
+                { question: "Qual a solução da equação (x - 4)² = 25?", answer: "x = 9 e x = -1", options: ["x = 9", "x = 29 e x = -21", "x = 9 e x = -1", "x = 5 e x = -5"], explanation: "Tirando a raiz quadrada dos dois lados: x - 4 = ±√25 => x - 4 = ±5. Temos duas possibilidades: x-4=5 (x=9) e x-4=-5 (x=-1)." },
+                { question: "Se o Delta (Δ) de uma equação é 49, quais serão os próximos passos na fórmula de Bhaskara?", answer: "x = (-b ± 7) / 2a", options: ["x = (-b ± 49) / 2a", "x = (-b ± 7) / 2a", "A equação não tem solução", "x = (b ± 7) / 2a"], explanation: "Na fórmula, usamos a raiz quadrada de Delta (√Δ). Como √49 = 7, a fórmula continua com ±7." },
+                { question: "A soma das raízes da equação 2x² - 10x + 8 = 0 é:", answer: "5", options: ["10", "8", "5", "4"], explanation: "A soma das raízes (x'+x'') é dada pela fórmula -b/a. Aqui, -(-10)/2 = 10/2 = 5." },
+
+                // Difíceis (5 questões - 25%)
+                { question: "Para quais valores de 'k' a equação x² - 6x + k = 0 possui duas raízes reais e diferentes?", answer: "k < 9", options: ["k > 9", "k < 9", "k = 9", "k < -9"], explanation: "Para ter duas raízes reais e diferentes, Δ > 0. Δ = (-6)² - 4*1*k = 36 - 4k.  36 - 4k > 0 => 36 > 4k => 9 > k, ou seja, k < 9." },
+                { question: "O produto das raízes da equação 3x² + 6x - 24 = 0 é:", answer: "-8", options: ["-2", "2", "-8", "8"], explanation: "O produto das raízes (x'*x'') é dado pela fórmula c/a. Aqui, c=-24 e a=3. O produto é -24/3 = -8." },
+                { question: "Uma equação do 2º grau tem raízes 4 e -2. Qual das seguintes pode ser a equação?", answer: "x² - 2x - 8 = 0", options: ["x² + 2x - 8 = 0", "x² - 2x - 8 = 0", "x² + 6x + 8 = 0", "x² - 6x - 8 = 0"], explanation: "Usando as relações de soma e produto: Soma = 4+(-2)=2. Produto = 4*(-2)=-8. A equação é x² - (Soma)x + (Produto) = 0 => x² - 2x - 8 = 0." },
+                { question: "Resolva a equação: (x + 1)/2 + x/3 = 2", answer: "x = 2", options: ["x = 1", "x = 2", "x = 5/6", "x = 6/5"], explanation: "O MMC é 6. Multiplicando tudo por 6: 3(x+1) + 2x = 12 => 3x + 3 + 2x = 12 => 5x = 9 => x = 9/5. CORREÇÃO: 3x+3+2x = 12 => 5x=9 => x=9/5. Vamos usar a resposta x=2. Se x=2 => (2+1)/2 + 2/3 = 3/2 + 2/3 = (9+4)/6 = 13/6. Não é 2. Vamos ajustar a questão para dar x=2: (x+2)/2 + x/4 = 2. MMC=4. 2(x+2) + x = 8 => 2x+4+x=8 => 3x=4 => x=4/3. Outra: x/2 + x/2 = 2 => x=2." },
+                { question: "A idade de Pedro hoje é o quadrado da idade que ele tinha há 6 anos. Qual a idade de Pedro hoje?", answer: "9 anos", options: ["4 anos", "9 anos", "16 anos", "36 anos"], explanation: "Seja P a idade de Pedro hoje. P = (P-6)². P = P² - 12P + 36 => P² - 13P + 36 = 0. Δ = (-13)²-4*1*36 = 169-144=25. P = (13±5)/2. P'=9, P''=4. A idade não pode ser 4, pois há 6 anos ele teria -2. Logo, a idade é 9." }
+            ];
+            
+            // Correction for question 19
+            quizData[18] = { question: "Resolva a equação: (x + 1)/2 + x/3 = 2", answer: "x = 9/5", options: ["x = 1", "x = 2", "x = 5/6", "x = 9/5"], explanation: "O MMC é 6. Multiplicando tudo por 6: 3(x+1) + 2x = 12 => 3x + 3 + 2x = 12 => 5x = 9 => x = 9/5." };
+
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

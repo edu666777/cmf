@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razão e Proporção - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Ratio and Proportion (definitions, properties, direct/inverse proportion). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about ratio and proportion for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Razão e Proporção</h1>
+            <p class="text-slate-600 mt-2">Domine a comparação entre grandezas e resolva problemas de proporcionalidade!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Decifrando a Razão e a Proporção</h2>
+                    <p class="mb-6 content-text">Razão e proporção são conceitos fundamentais que nos ajudam a comparar quantidades e a entender como elas se relacionam. Usamos isso em mapas, receitas, escalas e muito mais!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Razão é uma Divisão:</strong> A razão entre A e B é simplesmente a fração A/B.</li>
+                            <li><strong>Proporção é Igualdade de Razões:</strong> Se A/B = C/D, temos uma proporção.</li>
+                            <li><strong>Propriedade Fundamental:</strong> Em uma proporção, o "produto dos meios é igual ao produto dos extremos" (multiplicar em cruz). Se A/B = C/D, então A * D = B * C.</li>
+                            <li><strong>Diretamente Proporcional:</strong> Se uma grandeza aumenta, a outra também aumenta (ex: distância e tempo com velocidade constante).</li>
+                            <li><strong>Inversamente Proporcional:</strong> Se uma grandeza aumenta, a outra diminui (ex: trabalhadores e tempo para uma obra).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. O que é Razão?',
+                    content: 'Uma <strong>razão</strong> é uma comparação entre duas grandezas, feita através de uma <strong>divisão</strong> (ou uma fração). A razão entre 'a' e 'b' (com b ≠ 0) pode ser escrita como <span class="term-highlight">a/b</span> ou <span class="term-highlight">a : b</span> (lê-se "a está para b").<br><br><em>Exemplo: Numa sala com 15 meninos e 10 meninas, a razão entre o número de meninos e o número de meninas é 15/10. Simplificando a fração por 5, a razão é 3/2. Isso significa que, para cada 3 meninos, há 2 meninas.</em>'
+                },
+                {
+                    title: '2. O que é Proporção?',
+                    content: 'Uma <strong>proporção</strong> é uma <strong>igualdade entre duas razões</strong>. Se a razão <span class="term-highlight">a/b</span> é igual à razão <span class="term-highlight">c/d</span>, dizemos que elas formam uma proporção.<br><br>Escrevemos: <span class="term-highlight">a/b = c/d</span><br><br><em>Exemplo: A razão 1/2 é igual à razão 4/8, pois ambas representam a metade. Então, <span class="term-highlight">1/2 = 4/8</span> é uma proporção.</em>'
+                },
+                {
+                    title: '3. Propriedade Fundamental da Proporção',
+                    content: 'A propriedade mais importante das proporções diz que: "O produto dos meios é igual ao produto dos extremos".<br><br>Na proporção <span class="term-highlight">a/b = c/d</span>:<br><ul><li><strong>Extremos:</strong> são 'a' e 'd'.</li><li><strong>Meios:</strong> são 'b' e 'c'.</li></ul><br>Então, a propriedade afirma que: <span class="term-highlight">a * d = b * c</span><br><br>Este é o famoso método de <strong>"multiplicar em cruz"</strong>, usado para encontrar um valor desconhecido em uma proporção.<br><em>Exemplo: Para encontrar 'x' em <span class="term-highlight">x/4 = 3/2</span>, multiplicamos em cruz:</em><br>2 * x = 4 * 3<br>2x = 12<br>x = 6'
+                },
+                {
+                    title: '4. Grandezas Diretamente Proporcionais',
+                    content: 'Duas grandezas são <strong>diretamente proporcionais</strong> quando, ao <strong>aumentar</strong> uma, a outra <strong>aumenta na mesma proporção</strong> (e vice-versa). A razão entre elas é sempre constante.<br><br><em>Exemplo: Distância e Tempo (com velocidade constante). Se você dobrar o tempo de viagem, você dobrará a distância percorrida.</em><br><br><strong>Como resolver problemas:</strong> Organize as grandezas em colunas e monte a proporção. A multiplicação é em cruz.<br><em>Problema: Um carro consome 5 litros de gasolina para percorrer 50 km. Quantos litros consumirá para percorrer 120 km?</em><br>5 litros --- 50 km<br>x litros --- 120 km<br>A proporção é <span class="term-highlight">5/x = 50/120</span>. Multiplicando em cruz: 50x = 5 * 120 => 50x = 600 => x = 12 litros.'
+                },
+                {
+                    title: '5. Grandezas Inversamente Proporcionais',
+                    content: 'Duas grandezas são <strong>inversamente proporcionais</strong> quando, ao <strong>aumentar</strong> uma, a outra <strong>diminui na mesma proporção</strong>.<br><br><em>Exemplo: Velocidade e Tempo. Se você dobrar a velocidade, levará metade do tempo para completar o mesmo percurso.</em><br><br><strong>Como resolver problemas:</strong> Organize as grandezas em colunas, mas ao montar a proporção, <strong>inverta uma das razões</strong>. <br><em>Problema: 4 pedreiros constroem um muro em 9 dias. Quantos dias 6 pedreiros levariam para construir o mesmo muro?</em><br>4 pedreiros --- 9 dias<br>6 pedreiros --- x dias<br>Mais pedreiros, menos dias (inversamente proporcional). Invertemos a coluna dos pedreiros: <span class="term-highlight">6/4 = 9/x</span>. Multiplicando em cruz: 6x = 4 * 9 => 6x = 36 => x = 6 dias.'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis (5 questões - 25%)
+                { question: "Qual é a razão entre 10 e 2, na forma mais simples?", answer: "5/1", options: ["10/2", "2/10", "5/1", "1/5"], explanation: "A razão é 10/2. Simplificando por 2, obtemos 5/1." },
+                { question: "A igualdade 2/3 = 6/9 forma uma proporção?", answer: "Sim", options: ["Sim", "Não"], explanation: "Sim, pois podemos multiplicar o numerador e o denominador de 2/3 por 3 para obter 6/9. Ou, multiplicando em cruz: 2*9 = 18 e 3*6 = 18." },
+                { question: "Encontre o valor de x na proporção: x/5 = 8/10", answer: "x = 4", options: ["x = 2", "x = 4", "x = 5", "x = 8"], explanation: "Multiplicando em cruz: 10x = 5 * 8 => 10x = 40 => x = 4." },
+                { question: "Se uma receita pede 1 xícara de açúcar para 2 de farinha, a razão de açúcar para farinha é:", answer: "1/2", options: ["2/1", "1/2", "1 para 3", "3/1"], explanation: "A razão é a comparação direta entre as duas quantidades: 1 de açúcar para 2 de farinha, ou 1/2." },
+                { question: "A velocidade de um carro e o tempo para percorrer uma distância fixa são grandezas:", answer: "Inversamente proporcionais", options: ["Diretamente proporcionais", "Inversamente proporcionais", "Não proporcionais", "Iguais"], explanation: "Quanto maior a velocidade, menor será o tempo gasto para percorrer a mesma distância." },
+
+                // Médias (10 questões - 50%)
+                { question: "A escala de um mapa é 1 : 100.000. Se a distância no mapa entre duas cidades é de 5 cm, qual a distância real em km?", answer: "5 km", options: ["0,5 km", "5 km", "50 km", "500 km"], explanation: "1 cm no mapa = 100.000 cm reais. 5 cm = 500.000 cm. Para converter cm para km, dividimos por 100.000. Logo, 500.000 / 100.000 = 5 km." },
+                { question: "Em uma turma de 30 alunos, a razão entre o número de meninas e meninos é de 2 para 3. Quantas meninas há na turma?", answer: "12 meninas", options: ["10 meninas", "12 meninas", "15 meninas", "18 meninas"], explanation: "A cada 5 alunos (2+3), 2 são meninas. Em 30 alunos, temos 30/5 = 6 grupos. Então, 6 * 2 = 12 meninas." },
+                { question: "Se 5 impressoras imprimem 1000 páginas em 1 hora, quantas páginas 8 impressoras imprimiriam no mesmo tempo?", answer: "1600 páginas", options: ["1200 páginas", "1400 páginas", "1600 páginas", "1800 páginas"], explanation: "Grandezas diretamente proporcionais. 5/8 = 1000/x. Multiplicando em cruz: 5x = 8000 => x = 1600." },
+                { question: "Uma equipe de 6 funcionários produz 300 peças em 1 dia. Para produzir 500 peças no mesmo ritmo, quantos funcionários seriam necessários?", answer: "10 funcionários", options: ["8 funcionários", "9 funcionários", "10 funcionários", "12 funcionários"], explanation: "Regra de três direta. 6/x = 300/500. 300x = 6*500 => 300x = 3000 => x = 10." },
+                { question: "Encontre o valor de y na proporção: 3/7 = 9/y", answer: "y = 21", options: ["y = 14", "y = 18", "y = 21", "y = 27"], explanation: "Multiplicando em cruz: 3y = 7 * 9 => 3y = 63 => y = 21." },
+                { question: "Se 4 torneiras enchem uma piscina em 10 horas, 5 torneiras iguais encheriam a mesma piscina em:", answer: "8 horas", options: ["6 horas", "7,5 horas", "8 horas", "12,5 horas"], explanation: "Grandezas inversamente proporcionais. Invertemos uma razão: 5/4 = 10/x. 5x = 40 => x = 8 horas." },
+                { question: "A razão entre a idade de um pai e seu filho é de 7 para 2. Se o filho tem 10 anos, qual a idade do pai?", answer: "35 anos", options: ["25 anos", "30 anos", "35 anos", "40 anos"], explanation: "Pai/Filho = 7/2. P/10 = 7/2. 2P = 70 => P = 35 anos." },
+                { question: "Simplifique a razão 1,5 : 4,5", answer: "1 : 3", options: ["1 : 2", "2 : 3", "1 : 3", "3 : 5"], explanation: "Podemos multiplicar ambos por 10 para eliminar a vírgula (15:45). Depois, dividimos ambos por 15, resultando em 1:3." },
+                { question: "Um carro percorre 180 km em 2 horas. Mantendo a mesma velocidade, em 5 horas ele percorrerá:", answer: "450 km", options: ["360 km", "400 km", "450 km", "500 km"], explanation: "Regra de três direta. 180/x = 2/5. 2x = 180*5 => 2x = 900 => x = 450 km." },
+                { question: "Para pintar uma casa, 3 pintores levam 8 dias. Quantos dias 2 pintores levariam?", answer: "12 dias", options: ["10 dias", "11 dias", "12 dias", "14 dias"], explanation: "Grandezas inversamente proporcionais. 2/3 = 8/x (invertendo a primeira razão). 2x = 24 => x = 12 dias." },
+
+                // Difíceis (5 questões - 25%)
+                { question: "Em um mapa, 2 cm representam 5 km. Uma área de 10 cm² no mapa representa qual área real?", answer: "62,5 km²", options: ["25 km²", "50 km²", "62,5 km²", "100 km²"], explanation: "A razão linear é 2cm/5km = 1cm/2,5km. A razão de área é o quadrado da razão linear: (1cm)²/(2,5km)² = 1cm²/6,25km². Se 1cm² é 6,25km², então 10cm² é 10 * 6,25 = 62,5 km²." },
+                { question: "Dois números estão na razão de 2 para 5. Se a soma deles é 49, qual é o maior número?", answer: "35", options: ["14", "21", "35", "40"], explanation: "Podemos chamar os números de 2x e 5x. A soma é 2x + 5x = 49 => 7x = 49 => x = 7. O maior número é 5x = 5 * 7 = 35." },
+                { question: "Se a/b = 3/4 e b/c = 8/9, qual a razão a/c?", answer: "2/3", options: ["1/2", "2/3", "3/4", "4/3"], explanation: "Para encontrar a/c, multiplicamos as duas razões: (a/b) * (b/c) = (3/4) * (8/9). O 'b' se cancela, ficando a/c = 24/36. Simplificando por 12, temos a/c = 2/3." },
+                { question: "Uma roda de 30 dentes engrena com outra de 40 dentes. Enquanto a maior dá 60 voltas, quantas voltas dará a menor?", answer: "80 voltas", options: ["45 voltas", "60 voltas", "75 voltas", "80 voltas"], explanation: "Grandezas inversamente proporcionais (roda menor gira mais rápido). 30/40 = 60/x (invertendo a primeira razão). 30x = 40*60 => 30x = 2400 => x = 80 voltas." },
+                { question: "Para encher um tanque, 3 torneiras levam 6 horas. Se usarmos 2 torneiras e o fluxo de água de cada uma for 50% maior, em quanto tempo o tanque encherá?", answer: "6 horas", options: ["4 horas", "6 horas", "7,5 horas", "9 horas"], explanation: "A vazão total inicial é 3T. A nova vazão é 2 * (1,5T) = 3T. Como a vazão total é a mesma, o tempo para encher o tanque também será o mesmo, ou seja, 6 horas." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

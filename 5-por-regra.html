@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porcentagem e Regra de Três - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Percentage and Rule of Three (definitions, calculations, direct/inverse proportion). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about percentage and rule of three for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Porcentagem e Regra de Três</h1>
+            <p class="text-slate-600 mt-2">Domine cálculos do dia a dia e resolva problemas de proporcionalidade!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Decifrando a Porcentagem e a Regra de Três</h2>
+                    <p class="mb-6 content-text">Porcentagem e regra de três são ferramentas matemáticas que usamos o tempo todo, desde calcular descontos em uma loja até cozinhar uma receita para mais pessoas. Vamos aprender como elas funcionam!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Porcentagem é uma fração:</strong> Lembre-se que "por cento" significa "por 100". Então, 25% é o mesmo que 25/100 ou 0,25.</li>
+                            <li><strong>"De" vira multiplicação:</strong> Para calcular "20% de 50", você faz 0,20 * 50.</li>
+                            <li><strong>Aumentos e Descontos:</strong> Para um aumento de 15%, multiplique por 1,15. Para um desconto de 15%, multiplique por 0,85 (1 - 0,15).</li>
+                            <li><strong>Regra de Três:</strong> Primeiro, identifique se as grandezas são diretamente ou inversamente proporcionais. Isso muda tudo!</li>
+                            <li><strong>Diretamente Proporcional:</strong> Se uma grandeza aumenta, a outra também aumenta (ex: pães e farinha). Multiplica em cruz (X).</li>
+                            <li><strong>Inversamente Proporcional:</strong> Se uma grandeza aumenta, a outra diminui (ex: velocidade e tempo). Multiplica em linha reta.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. O que é Porcentagem?',
+                    content: 'Porcentagem é uma forma de expressar uma proporção ou uma relação entre dois valores a partir de uma fração cujo denominador é 100. O símbolo para representar a porcentagem é <strong>%</strong> (por cento).<br><br><strong>Representações de 25%:</strong><ul><li><strong>Forma Percentual:</strong> 25%</li><li><strong>Forma Fracionária:</strong> 25/100 (ou 1/4 na forma simplificada)</li><li><strong>Forma Decimal:</strong> 0,25</li></ul><br>Para calcular a porcentagem de um valor, basta multiplicar o valor pela forma decimal ou fracionária da porcentagem.<br><em>Exemplo: Quanto é 30% de 200?</em><br>Cálculo: 0,30 * 200 = 60'
+                },
+                {
+                    title: '2. Aumentos e Descontos Percentuais',
+                    content: 'Usamos fatores de multiplicação para facilitar o cálculo de aumentos e descontos.<br><br><strong>Aumento:</strong> O fator de aumento é <span class="term-highlight">(1 + taxa decimal)</span>.<br><em>Exemplo: Um produto de R$ 80,00 teve um aumento de 10%. Qual o novo preço?</em><br>Taxa decimal = 10% = 0,10. Fator = 1 + 0,10 = 1,10.<br>Novo preço = 80 * 1,10 = <strong>R$ 88,00</strong><br><br><strong>Desconto:</strong> O fator de desconto é <span class="term-highlight">(1 - taxa decimal)</span>.<br><em>Exemplo: Um produto de R$ 120,00 tem um desconto de 20%. Qual o novo preço?</em><br>Taxa decimal = 20% = 0,20. Fator = 1 - 0,20 = 0,80.<br>Novo preço = 120 * 0,80 = <strong>R$ 96,00</strong>'
+                },
+                {
+                    title: '3. O que é Regra de Três?',
+                    content: 'A Regra de Três é um método prático para resolver problemas que envolvem <strong>quatro valores</strong>, dos quais conhecemos três. Ela se baseia na proporcionalidade entre grandezas.<br><br><strong>Grandeza:</strong> É tudo aquilo que pode ser medido ou contado (ex: tempo, velocidade, distância, preço, quantidade).<br><br>Para usar a Regra de Três, primeiro precisamos saber se as grandezas são <strong>diretamente</strong> ou <strong>inversamente</strong> proporcionais.'
+                },
+                {
+                    title: '4. Grandezas Diretamente Proporcionais',
+                    content: 'Duas grandezas são diretamente proporcionais quando, ao <strong>aumentar</strong> uma, a outra <strong>aumenta na mesma proporção</strong> (ou quando uma diminui, a outra também diminui).<br><br><em>Exemplo: Pães e Farinha. Quanto MAIS pães eu quero fazer, MAIS farinha vou precisar.</em><br><br><strong>Como resolver:</strong> Organize as grandezas em colunas e multiplique os valores em <strong>cruz (X)</strong>.<br><em>Problema: Se com 2 xícaras de farinha faço 10 pães, com 6 xícaras faço quantos pães?</em><br><table class="w-1/2 mx-auto text-center"><thead><tr><th>Farinha</th><th>Pães</th></tr></thead><tbody><tr><td>2</td><td>10</td></tr><tr><td>6</td><td>x</td></tr></tbody></table><br>Montando a equação: <span class="term-highlight">2 * x = 6 * 10</span><br>2x = 60<br>x = 30 pães.'
+                },
+                {
+                    title: '5. Grandezas Inversamente Proporcionais',
+                    content: 'Duas grandezas são inversamente proporcionais quando, ao <strong>aumentar</strong> uma, a outra <strong>diminui na mesma proporção</strong>.<br><br><em>Exemplo: Velocidade e Tempo. Quanto MAIOR a minha velocidade, MENOR o tempo que levo para chegar a um lugar.</em><br><br><strong>Como resolver:</strong> Organize as grandezas em colunas, <strong>inverta uma das colunas</strong> e depois multiplique em cruz (ou simplesmente multiplique em <strong>linha reta</strong> sem inverter).<br><em>Problema: A 60 km/h, levo 2 horas para fazer uma viagem. Se eu for a 120 km/h, quanto tempo levarei?</em><br><table class="w-1/2 mx-auto text-center"><thead><tr><th>Velocidade (km/h)</th><th>Tempo (h)</th></tr></thead><tbody><tr><td>60</td><td>2</td></tr><tr><td>120</td><td>x</td></tr></tbody></table><br>Como são inversamente proporcionais, multiplicamos em linha:<br><span class="term-highlight">120 * x = 60 * 2</span><br>120x = 120<br>x = 1 hora.'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis (5 questões - 25%)
+                { question: "Quanto é 50% de 200?", answer: "100", options: ["50", "100", "150", "200"], explanation: "50% é o mesmo que metade. Metade de 200 é 100. Ou, 0,50 * 200 = 100." },
+                { question: "Como se escreve 75% na forma decimal?", answer: "0,75", options: ["7,5", "0,75", "75", "0,075"], explanation: "Para transformar porcentagem em decimal, basta dividir o número por 100, o que move a vírgula duas casas para a esquerda." },
+                { question: "Um produto que custava R$ 50,00 teve um aumento de 10%. Qual o novo preço?", answer: "R$ 55,00", options: ["R$ 45,00", "R$ 50,10", "R$ 55,00", "R$ 60,00"], explanation: "10% de R$ 50 é R$ 5. O novo preço é R$ 50 + R$ 5 = R$ 55. Ou, 50 * 1,10 = 55." },
+                { question: "Se 3 cadernos custam R$ 12,00, quanto custarão 5 cadernos?", answer: "R$ 20,00", options: ["R$ 15,00", "R$ 18,00", "R$ 20,00", "R$ 24,00"], explanation: "Regra de três direta. Se 3 está para 12, 5 está para x. 3x = 5*12 => 3x = 60 => x = 20." },
+                { question: "4 pintores levam 6 dias para pintar um muro. Isso é um exemplo de grandezas:", answer: "Inversamente proporcionais", options: ["Diretamente proporcionais", "Inversamente proporcionais", "Não proporcionais", "Exponenciais"], explanation: "Quanto MAIS pintores, MENOS dias serão necessários para o mesmo trabalho. Logo, são inversamente proporcionais." },
+
+                // Médias (10 questões - 50%)
+                { question: "Quanto é 15% de 300?", answer: "45", options: ["15", "30", "45", "50"], explanation: "0,15 * 300 = 45." },
+                { question: "Uma calça de R$ 150,00 está com 20% de desconto. Qual o valor final?", answer: "R$ 120,00", options: ["R$ 130,00", "R$ 120,00", "R$ 135,00", "R$ 110,00"], explanation: "Desconto de 20% significa que você paga 80%. 150 * 0,80 = 120. Ou, 20% de 150 é 30. 150 - 30 = 120." },
+                { question: "Numa sala com 40 alunos, 25% são meninas. Quantos meninos há na sala?", answer: "30", options: ["10", "15", "25", "30"], explanation: "25% de 40 são 10 meninas (40 * 0,25). O restante são meninos: 40 - 10 = 30 meninos." },
+                { question: "Uma torneira enche um tanque em 6 horas. Três torneiras iguais encherão o mesmo tanque em quanto tempo?", answer: "2 horas", options: ["18 horas", "3 horas", "2 horas", "1 hora"], explanation: "Regra de três inversa. Se 1 torneira leva 6h, 3 torneiras levarão x horas. 3*x = 1*6 => 3x = 6 => x = 2 horas." },
+                { question: "Para fazer um bolo para 10 pessoas, uso 4 ovos. Se eu quiser fazer um bolo para 15 pessoas, quantos ovos precisarei?", answer: "6 ovos", options: ["4 ovos", "5 ovos", "6 ovos", "8 ovos"], explanation: "Regra de três direta. Se 10 está para 4, 15 está para x. 10x = 15*4 => 10x = 60 => x = 6 ovos." },
+                { question: "Um carro a 80 km/h leva 3 horas para percorrer uma distância. A 120 km/h, quanto tempo levaria?", answer: "2 horas", options: ["4,5 horas", "4 horas", "2,5 horas", "2 horas"], explanation: "Regra de três inversa. Se 80 km/h leva 3h, 120 km/h leva x horas. 120*x = 80*3 => 120x = 240 => x = 2 horas." },
+                { question: "O preço de um jogo aumentou de R$ 200,00 para R$ 250,00. Qual foi o percentual de aumento?", answer: "25%", options: ["20%", "25%", "50%", "125%"], explanation: "O aumento foi de R$ 50. Para achar o percentual, dividimos o aumento pelo valor original: 50 / 200 = 0,25, que é 25%." },
+                { question: "Se 8 máquinas produzem 160 peças em 1 dia, quantas peças 5 máquinas produzirão no mesmo período?", answer: "100 peças", options: ["80 peças", "100 peças", "120 peças", "140 peças"], explanation: "Regra de três direta. Se 8 está para 160, 5 está para x. 8x = 5*160 => 8x = 800 => x = 100 peças." },
+                { question: "Um livro que custava R$ 40,00 passou a custar R$ 34,00. Qual foi o percentual de desconto?", answer: "15%", options: ["10%", "15%", "20%", "6%"], explanation: "O desconto foi de R$ 6,00. Dividindo o desconto pelo valor original: 6 / 40 = 0,15, que é 15%." },
+                { question: "Em uma prova de 20 questões, um aluno acertou 14. Qual seu percentual de acertos?", answer: "70%", options: ["14%", "60%", "70%", "80%"], explanation: "Para achar o percentual, dividimos a parte pelo todo: 14 / 20 = 0,7, que é 70%." },
+
+                // Difíceis (5 questões - 25%)
+                { question: "Um produto sofreu um aumento de 20% e, em seguida, um desconto de 20% sobre o novo preço. Em relação ao preço original, o preço final é:", answer: "4% menor", options: ["O mesmo", "4% maior", "4% menor", "10% menor"], explanation: "Seja o preço R$100. Com aumento de 20%, vai para R$120. Com desconto de 20% sobre 120 (0,20*120=24), o preço final é 120-24=R$96. De 100 para 96, a redução foi de 4%." },
+                { question: "12 operários, trabalhando 8 horas por dia, fazem uma obra em 10 dias. Se o número de operários for reduzido para 8, e eles trabalharem 6 horas por dia, em quantos dias farão a mesma obra?", answer: "20 dias", options: ["15 dias", "18 dias", "20 dias", "24 dias"], explanation: "Regra de três composta. Operários e Horas são inversos a Dias. Montando: (12/8) * (8/6) = x/10. (96/48) = x/10 => 2 = x/10 => x = 20 dias." },
+                { question: "Se 30% de um número é 12, quanto é 75% desse mesmo número?", answer: "30", options: ["24", "25", "30", "40"], explanation: "Primeiro, achamos o número. Se 0,30 * N = 12, então N = 12 / 0,30 = 40. Agora, calculamos 75% de 40: 0,75 * 40 = 30." },
+                { question: "Uma equipe de 5 pessoas prepara um banquete em 6 horas. Se duas pessoas não puderem ajudar, em quanto tempo as 3 pessoas restantes prepararão o mesmo banquete?", answer: "10 horas", options: ["8 horas", "9 horas", "10 horas", "12 horas"], explanation: "Regra de três inversa (menos pessoas, mais tempo). 5 pessoas levam 6h, 3 pessoas levam x horas. 3*x = 5*6 => 3x = 30 => x = 10 horas." },
+                { question: "Após um desconto de 15%, paguei R$ 170,00 por um produto. Qual era o preço original?", answer: "R$ 200,00", options: ["R$ 185,00", "R$ 195,50", "R$ 200,00", "R$ 210,00"], explanation: "Se houve 15% de desconto, paguei 85% do valor. Então, 0,85 * Preço = 170. Preço = 170 / 0,85 = 200." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

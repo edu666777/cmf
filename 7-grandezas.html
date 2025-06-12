@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grandezas e Medidas - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .conversion-table {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            background-color: #f8fafc;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Quantities and Measures (SI, length, mass, capacity, area, volume). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about quantities and measures for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Grandezas e Medidas</h1>
+            <p class="text-slate-600 mt-2">Domine as conversões de unidades e resolva problemas do dia a dia!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">O Mundo das Medidas</h2>
+                    <p class="mb-6 content-text">Medir coisas é fundamental em nossas vidas. Medimos distâncias, pesos, volumes... Para que todos se entendam, usamos um sistema de medidas padronizado. Vamos aprender a trabalhar com as principais grandezas e suas unidades!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Grandeza vs. Unidade:</strong> Grandeza é o que se mede (comprimento). Unidade é como se mede (metro, centímetro).</li>
+                            <li><strong>Converter para Direita:</strong> Ao converter para uma unidade menor (ex: metro para centímetro), você <strong>multiplica</strong> por 10, 100, 1000... (a vírgula "anda" para a direita).</li>
+                            <li><strong>Converter para Esquerda:</strong> Ao converter para uma unidade maior (ex: grama para quilograma), você <strong>divide</strong> por 10, 100, 1000... (a vírgula "anda" para a esquerda).</li>
+                            <li><strong>Área (²):</strong> Para converter unidades de área (m², cm²), o fator de conversão é 100 por casa (duas casas decimais por passo).</li>
+                            <li><strong>Volume (³):</strong> Para converter unidades de volume (m³, cm³), o fator de conversão é 1000 por casa (três casas decimais por passo).</li>
+                            <li><strong>Relação Mágica:</strong> <span class="term-highlight">1 Litro = 1 dm³</span>. E para água, <span class="term-highlight">1 Litro = 1 kg</span>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. O que são Grandezas e Medidas?',
+                    content: '<strong>Grandeza</strong> é tudo aquilo que pode ser medido: comprimento, massa, tempo, temperatura, etc.<br><br><strong>Medir</strong> é comparar uma grandeza com uma unidade padrão. A <strong>unidade</strong> é a referência que usamos. Por exemplo, para a grandeza "comprimento", podemos usar as unidades "metro", "centímetro" ou "quilômetro".'
+                },
+                {
+                    title: '2. O Sistema Métrico Decimal',
+                    content: 'Para facilitar a comunicação, a maioria dos países usa o Sistema Internacional de Unidades (SI), que é um sistema decimal (base 10). Os prefixos nos ajudam a entender a escala:<br><br><strong>Múltiplos (maiores que a unidade):</strong><br><ul><li><strong>quilo (k):</strong> 1000 vezes a unidade (1 km = 1000 m)</li><li><strong>hecto (h):</strong> 100 vezes a unidade (1 hg = 100 g)</li><li><strong>deca (da):</strong> 10 vezes a unidade (1 dal = 10 L)</li></ul><br><strong>Submúltiplos (menores que a unidade):</strong><br><ul><li><strong>deci (d):</strong> um décimo da unidade (1 m = 10 dm)</li><li><strong>centi (c):</strong> um centésimo da unidade (1 m = 100 cm)</li><li><strong>mili (m):</strong> um milésimo da unidade (1 m = 1000 mm)</li></ul>'
+                },
+                {
+                    title: '3. Conversão de Medidas de Comprimento, Massa e Capacidade',
+                    content: 'Para converter entre unidades, usamos uma tabela de conversão e movemos a vírgula. Cada "casa" que andamos na tabela corresponde a multiplicar ou dividir por 10.<br><br><div class="conversion-table">km - hm - dam - m - dm - cm - mm</div><br><em>Exemplo 1: Converter 2,5 km para metros (m).</em><br>De 'km' para 'm' são 3 casas para a direita. Movemos a vírgula 3 casas para a direita: 2,5 &rarr; 25, &rarr; 250, &rarr; 2500. Resultado: <strong>2500 m</strong>.<br><br><div class="conversion-table">kg - hg - dag - g - dg - cg - mg</div><br><em>Exemplo 2: Converter 350 g para quilogramas (kg).</em><br>De 'g' para 'kg' são 3 casas para a esquerda. Movemos a vírgula 3 casas para a esquerda: 350, &rarr; 35,0 &rarr; 3,50 &rarr; 0,350. Resultado: <strong>0,35 kg</strong>.<br><br>(O mesmo princípio vale para capacidade: kL, hL, daL, L, dL, cL, mL).'
+                },
+                {
+                    title: '4. Conversão de Medidas de Área (Superfície)',
+                    content: 'A área é uma medida bidimensional (comprimento x largura), por isso usamos unidades ao quadrado (m², cm², km²).<br><br>Ao converter unidades de área, cada "casa" que andamos na tabela vale por <strong>duas</strong> casas decimais (fator 100).<br><br><div class="conversion-table">km² - hm² - dam² - m² - dm² - cm² - mm²</div><br><em>Exemplo: Converter 3 m² para cm².</em><br>De 'm²' para 'cm²' são 2 casas na tabela. Como é área, movemos a vírgula 2 * 2 = 4 casas para a direita: 3,0 &rarr; 300,00 &rarr; 30000. Resultado: <strong>30.000 cm²</strong>.'
+                },
+                {
+                    title: '5. Conversão de Medidas de Volume',
+                    content: 'O volume é uma medida tridimensional (comprimento x largura x altura), por isso usamos unidades ao cubo (m³, dm³, cm³).<br><br>Ao converter unidades de volume, cada "casa" que andamos na tabela vale por <strong>três</strong> casas decimais (fator 1000).<br><br><div class="conversion-table">km³ - hm³ - dam³ - m³ - dm³ - cm³ - mm³</div><br><em>Exemplo: Converter 1,5 m³ para cm³.</em><br>De 'm³' para 'cm³' são 2 casas na tabela. Como é volume, movemos a vírgula 2 * 3 = 6 casas para a direita. Resultado: <strong>1.500.000 cm³</strong>.'
+                },
+                {
+                    title: '6. Relação entre Volume e Capacidade',
+                    content: 'Existe uma relação muito importante entre as medidas de volume e de capacidade (geralmente medida em litros).<br><br><strong>Relações Fundamentais:</strong><ul><li><span class="term-highlight">1 dm³ = 1 Litro (L)</span></li><li><span class="term-highlight">1 cm³ = 1 mililitro (mL)</span></li><li><span class="term-highlight">1 m³ = 1000 Litros (L)</span></li></ul><br>Essas relações nos permitem converter facilmente entre as duas grandezas. Se uma caixa tem um volume de 1 metro cúbico, cabem exatamente 1000 litros de água dentro dela.'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis (5 questões - 25%)
+                { question: "Quantos metros existem em 3 quilômetros?", answer: "3000 metros", options: ["30 metros", "300 metros", "3000 metros", "0,003 metros"], explanation: "A palavra 'quilo' significa 1000. Portanto, 3 quilômetros são 3 * 1000 = 3000 metros." },
+                { question: "Uma garrafa de refrigerante tem 2 litros (L). Quantos mililitros (mL) isso representa?", answer: "2000 mL", options: ["20 mL", "200 mL", "2000 mL", "0,02 mL"], explanation: "A palavra 'mili' significa milésimo. Portanto, 1 litro tem 1000 mililitros. 2 litros têm 2 * 1000 = 2000 mL." },
+                { question: "Para medir o peso de uma pessoa, qual a unidade mais adequada?", answer: "Quilograma (kg)", options: ["Grama (g)", "Miligrama (mg)", "Quilograma (kg)", "Tonelada (t)"], explanation: "O quilograma (kg) é a unidade padrão e mais conveniente para medir a massa de uma pessoa." },
+                { question: "Converter 5000 gramas (g) para quilogramas (kg) resulta em:", answer: "5 kg", options: ["0,5 kg", "5 kg", "50 kg", "500 kg"], explanation: "Como 1 kg = 1000 g, dividimos 5000 por 1000 para obter 5 kg." },
+                { question: "A grandeza 'tempo' pode ser medida em qual das seguintes unidades?", answer: "Segundos", options: ["Metros", "Litros", "Gramas", "Segundos"], explanation: "Segundos, minutos e horas são unidades de medida para a grandeza tempo." },
+                
+                // Médias (10 questões - 50%)
+                { question: "Quantos centímetros (cm) há em 1,5 metros (m)?", answer: "150 cm", options: ["15 cm", "150 cm", "1500 cm", "0,15 cm"], explanation: "Sabendo que 1 metro = 100 centímetros, multiplicamos 1,5 por 100, o que resulta em 150 cm." },
+                { question: "Um terreno retangular mede 20 metros de comprimento por 10 metros de largura. Qual sua área em m²?", answer: "200 m²", options: ["30 m²", "60 m²", "200 m²", "100 m²"], explanation: "A área de um retângulo é calculada multiplicando o comprimento pela largura: 20 m * 10 m = 200 m²." },
+                { question: "Converter 2,5 m² para cm² resulta em:", answer: "25.000 cm²", options: ["250 cm²", "2.500 cm²", "25.000 cm²", "250.000 cm²"], explanation: "Para converter de m² para cm², andamos duas casas na tabela (m² -> dm² -> cm²). Como é área, cada casa vale por 2 casas decimais. Total: 4 casas para a direita. 2,5 -> 25000." },
+                { question: "Uma caixa d'água tem 3 metros cúbicos (m³) de volume. Qual sua capacidade em litros?", answer: "3000 litros", options: ["3 litros", "30 litros", "300 litros", "3000 litros"], explanation: "A relação é 1 m³ = 1000 litros. Portanto, 3 m³ = 3 * 1000 = 3000 litros." },
+                { question: "Uma receita pede 750 mL de leite. Se você tem uma jarra de 1 Litro, quantos mL sobram?", answer: "250 mL", options: ["150 mL", "250 mL", "350 mL", "Não sobra"], explanation: "1 Litro é igual a 1000 mL. Se você usar 750 mL, sobram 1000 - 750 = 250 mL." },
+                { question: "Um atleta correu 42,195 km. Essa distância em metros é:", answer: "42.195 m", options: ["4.219,5 m", "42.195 m", "421.950 m", "4.219.500 m"], explanation: "Para converter km para m, multiplicamos por 1000 (movemos a vírgula 3 casas para a direita)." },
+                { question: "Um pequeno frasco contém 50 cm³ de perfume. Isso equivale a quantos mililitros (mL)?", answer: "50 mL", options: ["5 mL", "50 mL", "500 mL", "0,05 mL"], explanation: "A relação direta é 1 cm³ = 1 mL. Portanto, 50 cm³ = 50 mL." },
+                { question: "Qual a área de um quadrado com lado de 30 cm, em metros quadrados (m²)?", answer: "0,09 m²", options: ["900 m²", "9 m²", "0,9 m²", "0,09 m²"], explanation: "Primeiro, calculamos a área em cm²: 30 cm * 30 cm = 900 cm². Para converter cm² para m², dividimos por 10.000 (andamos 4 casas decimais para a esquerda). 900 -> 0,09." },
+                { question: "Se 1 Litro de água tem massa de 1 kg, qual a massa de 250 mL de água?", answer: "250 g", options: ["2,5 kg", "25 kg", "250 g", "25 g"], explanation: "250 mL é 0,250 L. Se 1L = 1kg, então 0,250 L = 0,250 kg. Convertendo para gramas: 0,250 kg * 1000 = 250 g." },
+                { question: "A distância entre duas cidades é de 300 km. Um carro já percorreu 180.000 metros. Quantos km ainda faltam?", answer: "120 km", options: ["120 km", "180 km", "282 km", "Faltam 0 km"], explanation: "Primeiro, converta 180.000 metros para km: 180.000 / 1000 = 180 km. A distância que falta é 300 km - 180 km = 120 km." },
+
+                // Difíceis (5 questões - 25%)
+                { question: "Um aquário tem dimensões de 50 cm de comprimento, 30 cm de largura e 40 cm de altura. Qual seu volume em litros?", answer: "60 litros", options: ["6 litros", "60 litros", "600 litros", "60.000 litros"], explanation: "Volume = 50 * 30 * 40 = 60.000 cm³. Como 1000 cm³ = 1 litro, dividimos por 1000: 60.000 / 1000 = 60 litros." },
+                { question: "Uma piscina de 10 m de comprimento, 5 m de largura e 1,5 m de profundidade está com 80% de sua capacidade. Quantos litros de água há na piscina?", answer: "60.000 litros", options: ["75.000 litros", "60.000 litros", "80.000 litros", "50.000 litros"], explanation: "Volume total = 10 * 5 * 1,5 = 75 m³. A capacidade total é 75.000 litros (1m³=1000L). 80% de 75.000 é 0,80 * 75000 = 60.000 litros." },
+                { question: "Um terreno de 0,5 hectares (ha) foi vendido. Sabendo que 1 ha = 10.000 m², qual a área do terreno em m²?", answer: "5.000 m²", options: ["50 m²", "500 m²", "5.000 m²", "50.000 m²"], explanation: "Se 1 hectare equivale a 10.000 m², então meio hectare (0,5) equivale à metade disso: 0,5 * 10.000 = 5.000 m²." },
+                { question: "A velocidade da luz é aproximadamente 300.000 km/s. Qual é essa velocidade em metros por segundo (m/s)?", answer: "3 x 10⁸ m/s", options: ["3 x 10⁵ m/s", "3 x 10⁶ m/s", "3 x 10⁸ m/s", "3 x 10⁹ m/s"], explanation: "Para converter km para m, multiplicamos por 1000 (10³). 300.000 = 3 x 10⁵. Então (3 x 10⁵) * 10³ = 3 x 10⁸ m/s." },
+                { question: "Um cubo tem 2 metros de aresta. Se sua área total for pintada e o custo por m² for R$ 5,00, qual será o custo total?", answer: "R$ 120,00", options: ["R$ 40,00", "R$ 60,00", "R$ 120,00", "R$ 240,00"], explanation: "Um cubo tem 6 faces quadradas. A área de uma face é 2m * 2m = 4 m². A área total é 6 * 4 m² = 24 m². O custo total é 24 m² * R$ 5,00/m² = R$ 120,00." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>
