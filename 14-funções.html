@@ -240,15 +240,16 @@
 
             function createAccordion() {
                 accordionContainer.innerHTML = '';
-                learnData.forEach(item => {
+                learnData.forEach((item, idx) => {
                     const div = document.createElement('div');
                     div.className = 'border border-stone-200 rounded-lg';
                     div.innerHTML = `
-                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                        <button type="button" class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors"
+                            aria-expanded="false" aria-controls="accordion-content-${idx}">
                             <span>${item.title}</span>
                             <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
                         </button>
-                        <div class="accordion-content">
+                        <div id="accordion-content-${idx}" class="accordion-content" role="region" aria-labelledby="accordion-header-${idx}">
                             <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
                                 ${item.content}
                             </div>
@@ -257,18 +258,27 @@
                     accordionContainer.appendChild(div);
                 });
 
-                document.querySelectorAll('.accordion-button').forEach(button => {
+                document.querySelectorAll('.accordion-button').forEach((button, idx) => {
                     button.addEventListener('click', () => {
                         const icon = button.querySelector('span:last-child');
                         const isOpen = button.classList.toggle('open');
-                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        button.setAttribute('aria-expanded', isOpen);
+                        const content = button.nextElementSibling;
                         if (isOpen) {
-                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                            // Fecha outros
+                            document.querySelectorAll('.accordion-button.open').forEach((openButton) => {
                                 if (openButton !== button) {
                                     openButton.classList.remove('open');
+                                    openButton.setAttribute('aria-expanded', 'false');
                                     openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                    openButton.nextElementSibling.style.maxHeight = null;
                                 }
                             });
+                            icon.style.transform = 'rotate(180deg)';
+                            content.style.maxHeight = content.scrollHeight + "px";
+                        } else {
+                            icon.style.transform = 'rotate(0deg)';
+                            content.style.maxHeight = null;
                         }
                     });
                 });
