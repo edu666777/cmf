@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume de Sólidos Geométricos - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .formula-box {
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Volume of Geometric Solids (definitions, formulas for main solids). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about volume of solids for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Volume de Sólidos</h1>
+            <p class="text-slate-600 mt-2">Domine o cálculo do espaço ocupado pelos principais sólidos geométricos!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Calculando o Volume de Sólidos Geométricos</h2>
+                    <p class="mb-6 content-text">Volume é a medida do espaço que um objeto ocupa. É um conceito tridimensional, e sua unidade de medida é cúbica (cm³, m³, etc.). Vamos aprender as fórmulas para calcular o volume dos sólidos mais importantes!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Volume = Área da Base x Altura:</strong> Essa é a ideia principal para a maioria dos prismas e para o cilindro.</li>
+                            <li><strong>Sólidos "Pontudos":</strong> Para sólidos que terminam em um único vértice (cone e pirâmide), a fórmula do volume é a mesma do prisma/cilindro correspondente, mas <strong>dividida por 3</strong>.</li>
+                            <li><strong>Unidades Cúbicas:</strong> Lembre-se que o resultado do volume é sempre em unidades cúbicas (cm³, m³, etc.).</li>
+                            <li><strong>Altura (h):</strong> A altura de um sólido é sempre a distância <strong>perpendicular</strong> (forma 90°) entre a base e o topo.</li>
+                            <li><strong>Pi (π):</strong> Para cilindros e cones, use o valor de π que o problema fornecer (geralmente 3,14 ou 3).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. Cubo',
+                    content: 'Um cubo é um sólido com 6 faces quadradas, 12 arestas iguais e 8 vértices.<br><br><strong>Fórmula do Volume (V):</strong> O volume é o cubo da medida da sua aresta (a).<div class="formula-box">V = a * a * a = a³</div>'
+                },
+                {
+                    title: '2. Paralelepípedo Retângulo',
+                    content: 'É um sólido com 6 faces retangulares, como uma caixa de sapatos.<br><br><strong>Fórmula do Volume (V):</strong> O volume é o produto do seu comprimento (a), largura (b) e altura (c).<div class="formula-box">V = a * b * c</div>'
+                },
+                {
+                    title: '3. Prisma',
+                    content: 'Um prisma é um sólido com duas bases poligonais (triângulos, quadrados, hexágonos, etc.) paralelas e congruentes, e faces laterais que são paralelogramos.<br><br><strong>Fórmula do Volume (V):</strong> O volume de qualquer prisma é o produto da área da sua base (A<sub>b</sub>) pela sua altura (h).<div class="formula-box">V = A<sub>b</sub> * h</div><span class="example-diagram">Primeiro você calcula a área da base (se for um triângulo, um quadrado, etc.) e depois multiplica pela altura do prisma.</span>'
+                },
+                {
+                    title: '4. Cilindro',
+                    content: 'O cilindro é como um prisma, mas com bases circulares.<br><br><strong>Fórmula do Volume (V):</strong> O volume também é o produto da área da base (que é um círculo) pela altura (h). A área do círculo é πr².<div class="formula-box">V = (π * r²) * h</div>'
+                },
+                {
+                    title: '5. Pirâmide',
+                    content: 'A pirâmide tem uma base poligonal e um vértice no topo. Suas faces laterais são triângulos.<br><br><strong>Fórmula do Volume (V):</strong> O volume da pirâmide é <strong>um terço</strong> do volume de um prisma com a mesma base e mesma altura.<div class="formula-box">V = (A<sub>b</sub> * h) / 3</div><span class="example-diagram">Calcule a área da base (quadrada, triangular, etc.), multiplique pela altura e divida tudo por 3.</span>'
+                },
+                {
+                    title: '6. Cone',
+                    content: 'O cone é como uma pirâmide, mas com uma base circular.<br><br><strong>Fórmula do Volume (V):</strong> O volume do cone é <strong>um terço</strong> do volume de um cilindro com a mesma base e mesma altura.<div class="formula-box">V = (π * r² * h) / 3</div>'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis
+                { question: "Qual o volume de um cubo com aresta de 3 cm?", answer: "27 cm³", options: ["9 cm³", "18 cm³", "27 cm³", "30 cm³"], explanation: "O volume do cubo é aresta ao cubo. V = 3³ = 3 * 3 * 3 = 27 cm³." },
+                { question: "Uma caixa tem o formato de um paralelepípedo com dimensões 10 cm, 5 cm e 2 cm. Qual é o seu volume?", answer: "100 cm³", options: ["17 cm³", "50 cm³", "100 cm³", "200 cm³"], explanation: "O volume do paralelepípedo é comprimento * largura * altura. V = 10 * 5 * 2 = 100 cm³." },
+                { question: "Um prisma tem área da base igual a 20 m² e altura de 5 m. Qual o seu volume?", answer: "100 m³", options: ["25 m³", "50 m³", "100 m³", "4 m³"], explanation: "O volume do prisma é Área da Base * Altura. V = 20 * 5 = 100 m³." },
+                { question: "A fórmula (Área da Base * Altura) / 3 é usada para calcular o volume de qual sólido?", answer: "Pirâmide ou Cone", options: ["Cubo", "Prisma", "Pirâmide ou Cone", "Cilindro"], explanation: "Sólidos que terminam em ponta (vértice), como pirâmides e cones, têm o fator '/ 3' em sua fórmula de volume." },
+                { question: "Um cilindro tem raio da base de 2 cm e altura de 10 cm. Qual é o seu volume? (Use π = 3)", answer: "120 cm³", options: ["60 cm³", "120 cm³", "200 cm³", "40 cm³"], explanation: "V = π * r² * h = 3 * (2)² * 10 = 3 * 4 * 10 = 120 cm³." },
+
+                // Médias
+                { question: "Uma pirâmide tem uma base quadrada de lado 6 m e altura de 10 m. Qual é o seu volume?", answer: "120 m³", options: ["60 m³", "180 m³", "120 m³", "360 m³"], explanation: "Área da base (quadrada) = 6 * 6 = 36 m². Volume = (Área da base * altura) / 3 = (36 * 10) / 3 = 360 / 3 = 120 m³." },
+                { question: "Qual o volume de um cubo cuja área de uma face é 25 cm²?", answer: "125 cm³", options: ["25 cm³", "50 cm³", "125 cm³", "150 cm³"], explanation: "Se a área da face quadrada é 25 cm², então o lado (aresta) é √25 = 5 cm. O volume é aresta³, ou seja, 5³ = 125 cm³." },
+                { question: "Um copo em formato de cone tem raio da base de 5 cm e altura de 12 cm. Qual seu volume? (Use π = 3)", answer: "300 cm³", options: ["180 cm³", "300 cm³", "60 cm³", "900 cm³"], explanation: "V = (π * r² * h) / 3 = (3 * 5² * 12) / 3. Podemos cortar o 3 de cima com o de baixo, ficando V = 5² * 12 = 25 * 12 = 300 cm³." },
+                { question: "Um prisma tem como base um triângulo retângulo de catetos 6 cm e 8 cm. Se a altura do prisma é 10 cm, qual seu volume?", answer: "240 cm³", options: ["480 cm³", "140 cm³", "240 cm³", "80 cm³"], explanation: "Área da base (triângulo) = (base * altura_tri) / 2 = (6 * 8) / 2 = 24 cm². Volume do prisma = Área da base * altura_prisma = 24 * 10 = 240 cm³." },
+                { question: "Uma lata de óleo cilíndrica tem diâmetro de 10 cm e altura de 20 cm. Qual seu volume? (Use π = 3,14)", answer: "1570 cm³", options: ["628 cm³", "3140 cm³", "1570 cm³", "785 cm³"], explanation: "Se o diâmetro é 10 cm, o raio é 5 cm. V = π * r² * h = 3,14 * 5² * 20 = 3,14 * 25 * 20 = 3,14 * 500 = 1570 cm³." },
+                { question: "Qual o volume de um paralelepípedo com dimensões 0,5 m, 2 m e 3 m?", answer: "3 m³", options: ["1 m³", "3 m³", "5,5 m³", "6 m³"], explanation: "Volume = 0,5 * 2 * 3 = 1 * 3 = 3 m³." },
+                { question: "Um prisma de base hexagonal tem área da base de 50 cm² e volume de 500 cm³. Qual é a sua altura?", answer: "10 cm", options: ["5 cm", "10 cm", "15 cm", "20 cm"], explanation: "Volume = Área da Base * Altura. 500 = 50 * h. h = 500 / 50 = 10 cm." },
+                { question: "Se o volume de um cubo é 64 cm³, qual a medida de sua aresta?", answer: "4 cm", options: ["2 cm", "4 cm", "8 cm", "16 cm"], explanation: "Se V = aresta³, então aresta = ³√V. A raiz cúbica de 64 é 4, pois 4*4*4=64." },
+                { question: "O volume de uma pirâmide é 40 m³. Se sua altura é 6 m, qual a área da sua base?", answer: "20 m²", options: ["10 m²", "20 m²", "30 m²", "40 m²"], explanation: "V = (A_b * h) / 3 => 40 = (A_b * 6) / 3 => 40 = A_b * 2 => A_b = 20 m²." },
+                { question: "Um cilindro e um cone têm o mesmo raio e a mesma altura. Se o volume do cilindro é 90 cm³, qual o volume do cone?", answer: "30 cm³", options: ["30 cm³", "45 cm³", "60 cm³", "90 cm³"], explanation: "O volume do cone é sempre um terço do volume do cilindro de mesma base e altura. V_cone = 90 / 3 = 30 cm³." },
+
+                // Difíceis
+                { question: "O volume de um paralelepípedo é 120 m³. Suas dimensões são x, x+1 e x+2. Quais são as dimensões?", answer: "4m, 5m e 6m", options: ["3m, 4m e 5m", "4m, 5m e 6m", "5m, 6m e 7m", "2m, 3m e 4m"], explanation: "Precisamos de 3 números consecutivos cujo produto seja 120. Testando as opções, 4 * 5 * 6 = 20 * 6 = 120." },
+                { question: "Uma piscina retangular de 10 m de comprimento por 5 m de largura é enchida até uma altura de 1,5 m. Qual o volume de água na piscina em litros?", answer: "75.000 litros", options: ["7.500 litros", "75.000 litros", "750.000 litros", "750 litros"], explanation: "Volume em m³ = 10 * 5 * 1,5 = 75 m³. Como 1 m³ = 1000 litros, o volume é 75 * 1000 = 75.000 litros." },
+                { question: "Um cilindro tem altura igual ao dobro do raio da base. Se o volume é 128π cm³, qual é o raio?", answer: "4 cm", options: ["2 cm", "4 cm", "6 cm", "8 cm"], explanation: "V = πr²h. Como h=2r, temos V = πr²(2r) = 2πr³.  128π = 2πr³ => 64 = r³ => r = 4 cm." },
+                { question: "Uma pirâmide está inscrita em um cubo de aresta 6 cm (a base da pirâmide é a base do cubo e seu vértice toca a face oposta). Qual o volume da pirâmide?", answer: "72 cm³", options: ["36 cm³", "72 cm³", "108 cm³", "216 cm³"], explanation: "A base da pirâmide é um quadrado de 6x6 (Área=36 cm²). A altura da pirâmide é igual à aresta do cubo (6 cm). V = (36*6)/3 = 216/3 = 72 cm³." },
+                { question: "Ao derreter um bloco de metal cúbico de aresta 10 cm, quantas esferas de raio 1 cm podemos formar, aproximadamente? (Volume da esfera = 4/3 * πr³; use π=3)", answer: "250 esferas", options: ["100 esferas", "125 esferas", "250 esferas", "500 esferas"], explanation: "Volume do cubo = 10³ = 1000 cm³. Volume de uma esfera = (4/3)*3*(1³) = 4 cm³. Número de esferas = Volume total / Volume da esfera = 1000 / 4 = 250 esferas." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

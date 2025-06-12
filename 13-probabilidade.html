@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estatística e Probabilidade - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .formula-box {
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Basic Statistics and Probability. 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about statistics and probability for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Estatística e Probabilidade</h1>
+            <p class="text-slate-600 mt-2">Domine o cálculo de Média, Moda, Mediana e Probabilidade Simples!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Medidas de Tendência Central e Probabilidade</h2>
+                    <p class="mb-6 content-text">Na estatística, usamos as medidas de tendência central para encontrar um valor "típico" que represente o centro de um conjunto de dados. Já a probabilidade nos ajuda a medir as chances de um evento acontecer.</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Média:</strong> Some tudo e divida pela quantidade.</li>
+                            <li><strong>Moda:</strong> É o que mais aparece.</li>
+                            <li><strong>Mediana:</strong> O valor do meio, com os dados em ordem!</li>
+                            <li><strong>Rol:</strong> Para calcular a Mediana, o primeiro passo é sempre organizar os dados em ordem (o Rol).</li>
+                            <li><strong>Probabilidade:</strong> É a razão entre o que você quer (casos favoráveis) e tudo que pode acontecer (casos possíveis).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. Média Aritmética',
+                    content: 'A <strong>Média</strong> é a medida de tendência central mais comum. Para calculá-la, você soma todos os valores de um conjunto e divide o resultado pela quantidade de valores que você somou.<br><br><div class="formula-box">Média = (Soma de todos os valores) / (Quantidade de valores)</div><br><em>Exemplo: As notas de um aluno foram 7, 8, 9 e 10.</em><br>Soma = 7 + 8 + 9 + 10 = 34<br>Quantidade = 4 notas<br>Média = 34 / 4 = <strong>8,5</strong><br><br><span class="example-diagram">A média é muito influenciada por valores muito altos ou muito baixos (outliers).</span>'
+                },
+                {
+                    title: '2. Moda',
+                    content: 'A <strong>Moda (Mo)</strong> é o valor que <strong>mais se repete</strong> em um conjunto de dados. É a medida mais fácil de ser identificada.<br><br>Um conjunto de dados pode ter:<br><ul><li><strong>Nenhuma moda (amodal):</strong> Se todos os valores aparecem a mesma quantidade de vezes. Ex: (1, 2, 3, 4, 5)</li><li><strong>Uma moda (unimodal):</strong> Ex: (2, 3, <strong>4, 4, 4</strong>, 5, 6) &rarr; A moda é <strong>4</strong>.</li><li><strong>Duas modas (bimodal):</strong> Ex: (7, 8, <strong>9, 9</strong>, 10, <strong>11, 11</strong>, 12) &rarr; As modas são <strong>9</strong> e <strong>11</strong>.</li><li><strong>Três ou mais modas (multimodal).</strong></li></ul>'
+                },
+                {
+                    title: '3. Mediana',
+                    content: 'A <strong>Mediana (Me)</strong> é o valor que ocupa a <strong>posição central</strong> de um conjunto de dados, depois que eles foram organizados em ordem crescente ou decrescente (essa lista ordenada é chamada de <strong>Rol</strong>).<br><br><strong>1º Passo: Organizar os dados (criar o Rol).</strong><br><br><strong>2º Passo: Encontrar o valor central.</strong><br><ul><li><strong>Se a quantidade de dados for ÍMPAR:</strong> A mediana é o número que está exatamente no meio.<br><em>Exemplo: Dados (5, 2, 8, 1, 9). Rol: (1, 2, <strong>5</strong>, 8, 9). A mediana é <strong>5</strong>.</em></li><br><li><strong>Se a quantidade de dados for PAR:</strong> A mediana é a <strong>média aritmética</strong> dos dois valores que estão no centro.<br><em>Exemplo: Dados (4, 8, 2, 10). Rol: (2, <strong>4, 8</strong>, 10). Os valores centrais são 4 e 8.</em><br>Mediana = (4 + 8) / 2 = 12 / 2 = <strong>6</strong>.</li></ul><span class="example-diagram">A mediana não é afetada por valores extremos, sendo uma boa medida para conjuntos de dados com outliers.</span>'
+                },
+                {
+                    title: '4. Probabilidade Simples',
+                    content: 'A <strong>Probabilidade</strong> é o ramo da matemática que estuda as chances de um determinado resultado ocorrer em um experimento aleatório.<br><br><strong>Experimento Aleatório:</strong> É um evento que pode ter resultados diferentes, mesmo que repetido da mesma forma (ex: jogar um dado).<br><strong>Espaço Amostral:</strong> O conjunto de TODOS os resultados possíveis.<br><strong>Evento:</strong> O resultado ou conjunto de resultados que nos interessa.<br><br>A fórmula para calcular a probabilidade de um evento (P(E)) é:<div class="formula-box">P(E) = (Número de Casos Favoráveis) / (Número Total de Casos Possíveis)</div><br><em>Exemplo: Qual a probabilidade de tirar um número par ao jogar um dado de 6 faces?</em><br>Casos Possíveis (Espaço Amostral) = {1, 2, 3, 4, 5, 6} &rarr; 6 casos.<br>Casos Favoráveis (Evento "ser par") = {2, 4, 6} &rarr; 3 casos.<br>P(par) = 3/6 = 1/2 ou 50%.'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis
+                { question: "Qual a média das idades: 10, 12, 14?", answer: "12", options: ["10", "12", "14", "36"], explanation: "Média = (10 + 12 + 14) / 3 = 36 / 3 = 12." },
+                { question: "Qual a moda do conjunto de dados: 5, 7, 8, 7, 9, 7, 6?", answer: "7", options: ["5", "6", "7", "8"], explanation: "A moda é o valor que mais se repete. O número 7 aparece 3 vezes, mais que qualquer outro." },
+                { question: "Qual a mediana do conjunto de dados: 3, 5, 1, 8, 4?", answer: "4", options: ["1", "3", "4", "5"], explanation: "Primeiro, organizamos os dados (Rol): 1, 3, 4, 5, 8. O valor que está exatamente no meio é o 4." },
+                { question: "Ao jogar uma moeda, qual a probabilidade de sair 'cara'?", answer: "1/2 ou 50%", options: ["1/1 ou 100%", "1/2 ou 50%", "0", "Depende da moeda"], explanation: "Existem 2 resultados possíveis (cara, coroa) e 1 deles é favorável (cara). A probabilidade é 1/2." },
+                { question: "Qual a média das notas: 10, 8, 6?", answer: "8", options: ["6", "7", "8", "9"], explanation: "Média = (10 + 8 + 6) / 3 = 24 / 3 = 8." },
+
+                // Médias
+                { question: "Calcule a mediana do conjunto: 6, 2, 10, 8.", answer: "7", options: ["6", "7", "8", "9"], explanation: "Rol: 2, 6, 8, 10. A quantidade de dados é par. Pegamos os dois valores centrais (6 e 8) e fazemos a média: (6+8)/2 = 14/2 = 7." },
+                { question: "Ao jogar um dado de 6 faces, qual a probabilidade de sair um número par?", answer: "1/2 ou 50%", options: ["1/6", "2/6 ou 1/3", "1/2 ou 50%", "4/6 ou 2/3"], explanation: "Os casos possíveis são 6. Os casos favoráveis (números pares) são {2, 4, 6}, ou seja, 3 casos. Probabilidade = 3/6 = 1/2." },
+                { question: "Qual a moda do conjunto: 1, 2, 3, 4, 5, 6?", answer: "Amodal (não tem moda)", options: ["1", "3,5", "6", "Amodal (não tem moda)"], explanation: "Nenhum valor se repete mais que os outros. Portanto, o conjunto é amodal." },
+                { question: "Numa sacola com 5 bolas verdes e 3 azuis, qual a probabilidade de tirar uma bola azul?", answer: "3/8", options: ["5/8", "3/8", "3/5", "1/3"], explanation: "O total de bolas é 5+3=8 (casos possíveis). O número de bolas azuis é 3 (casos favoráveis). A probabilidade é 3/8." },
+                { question: "Qual a mediana dos números: 20, 15, 25, 30, 10, 5?", answer: "17,5", options: ["15", "20", "22,5", "17,5"], explanation: "Rol: 5, 10, 15, 20, 25, 30. Valores centrais: 15 e 20. Mediana = (15+20)/2 = 35/2 = 17,5." },
+                { question: "Se a média de dois números é 15 e um dos números é 12, qual é o outro número?", answer: "18", options: ["15", "18", "27", "30"], explanation: "Se a média é 15, a soma é 15*2=30. Se um é 12, o outro é 30-12=18." },
+                { question: "O conjunto (8, 9, 10, 10, 11, 12, 12) é classificado como:", answer: "Bimodal", options: ["Unimodal", "Bimodal", "Amodal", "Trimodal"], explanation: "Os números 10 e 12 aparecem duas vezes cada um. Como há duas modas, o conjunto é bimodal." },
+                { question: "Qual medida de tendência central é mais afetada por um valor muito extremo (outlier)?", answer: "Média", options: ["Moda", "Mediana", "Média", "Nenhuma delas"], explanation: "A média leva em conta todos os valores para o seu cálculo. Um valor muito alto ou baixo 'puxa' a média para perto dele." },
+                { question: "A média de idade de 4 amigos é 16 anos. Se um quinto amigo de 21 anos se junta ao grupo, qual será a nova média?", answer: "17 anos", options: ["16,5 anos", "17 anos", "18,5 anos", "19 anos"], explanation: "A soma das idades dos 4 amigos era 4*16=64. Com o novo amigo, a nova soma é 64+21=85. A nova média é 85/5 = 17 anos." },
+                { question: "Em um baralho comum de 52 cartas, qual a probabilidade de tirar uma carta do naipe de Copas?", answer: "1/4 ou 25%", options: ["1/52", "4/52", "1/4 ou 25%", "1/2 ou 50%"], explanation: "Existem 13 cartas de Copas em um baralho de 52 cartas. A probabilidade é 13/52, que simplificando por 13, resulta em 1/4." },
+
+                // Difíceis
+                { question: "Um aluno precisa de média 7 para passar. Suas notas nas 3 primeiras provas foram 6, 5 e 9. Quanto ele precisa tirar na última prova para passar com a média exata de 7?", answer: "8", options: ["7", "7,5", "8", "8,5"], explanation: "A soma total para 4 provas com média 7 deve ser 4*7=28. A soma atual é 6+5+9=20. Ele precisa de 28-20=8 na última prova." },
+                { question: "A mediana de um conjunto com 101 números organizados em rol é:", answer: "O 51º termo", options: ["A média do 50º e 51º termos", "O 50º termo", "O 51º termo", "O 101º termo"], explanation: "Se há 101 termos (ímpar), o termo central é encontrado por (101+1)/2 = 51. A mediana será o 51º elemento." },
+                { question: "A moda, a mediana e a média do conjunto (2, 4, 4, 5, 10) são, respectivamente:", answer: "4, 4, 5", options: ["4, 5, 5", "4, 4, 5", "5, 4, 4", "4, 4, 4"], explanation: "Moda (mais se repete) = 4. Rol (2,4,4,5,10), Mediana (termo do meio) = 4. Média = (2+4+4+5+10)/5 = 25/5 = 5." },
+                { question: "Um conjunto de 5 números tem média 8. Se retirarmos o número 12 do conjunto, qual será a nova média dos 4 números restantes?", answer: "7", options: ["6,5", "7", "7,5", "8"], explanation: "A soma original dos 5 números era 5*8=40. Retirando o 12, a nova soma é 40-12=28. A nova média é 28/4=7." },
+                { question: "Uma urna contém 10 bolas idênticas, numeradas de 1 a 10. Qual a probabilidade de se retirar uma bola e o número ser um divisor de 12?", answer: "5/10 ou 1/2", options: ["4/10 ou 2/5", "5/10 ou 1/2", "6/10 ou 3/5", "12/10"], explanation: "Os divisores de 12 são 1, 2, 3, 4, 6, 12. Desses, os que estão na urna (1 a 10) são {1, 2, 3, 4, 6}. São 5 casos favoráveis em 10 possíveis. P = 5/10 = 1/2." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

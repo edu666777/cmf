@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ângulos, Triângulos e Polígonos - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .formula-box {
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Angles, Triangles, and Polygons. 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about plane geometry for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate geometry problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Ângulos, Triângulos e Polígonos</h1>
+            <p class="text-slate-600 mt-2">Domine os conceitos fundamentais da geometria plana!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Explorando as Formas Geométricas</h2>
+                    <p class="mb-6 content-text">Ângulos, triângulos e polígonos são a base de tudo que vemos no mundo. Entender suas propriedades nos ajuda a resolver problemas de lógica, engenharia, arte e muito mais. Vamos começar!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Soma dos Ângulos do Triângulo:</strong> A soma dos ângulos internos de QUALQUER triângulo é sempre <strong>180°</strong>.</li>
+                            <li><strong>Soma dos Ângulos do Polígono:</strong> Use a fórmula <span class="term-highlight">S = (n-2) * 180°</span>, onde 'n' é o número de lados.</li>
+                            <li><strong>Ângulos Opostos pelo Vértice (OPV):</strong> Ângulos opostos por um vértice são sempre iguais.</li>
+                            <li><strong>Retas Paralelas Cortadas por Transversal:</strong> Lembre-se dos ângulos alternos internos/externos (iguais) e dos colaterais (somam 180°).</li>
+                            <li><strong>Polígono Regular:</strong> Tem todos os lados E todos os ângulos internos iguais.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. Ângulos: Fundamentos',
+                    content: '<strong>Ângulo</strong> é a medida da abertura entre duas semirretas que partem de um mesmo ponto (vértice).<br><br><strong>Classificação dos Ângulos:</strong><ul><li><strong>Agudo:</strong> Menor que 90°.</li><li><strong>Reto:</strong> Exatamente 90°.</li><li><strong>Obtuso:</strong> Maior que 90° e menor que 180°.</li><li><strong>Raso:</strong> Exatamente 180° (uma linha reta).</li></ul><br><strong>Relações entre Ângulos:</strong><ul><li><strong>Complementares:</strong> Dois ângulos que somam 90°.</li><li><strong>Suplementares:</strong> Dois ângulos que somam 180°.</li><li><strong>Opostos pelo Vértice (OPV):</strong> Formados pelo cruzamento de duas retas. Eles são sempre iguais.</li></ul>'
+                },
+                {
+                    title: '2. Retas Paralelas e uma Transversal',
+                    content: 'Quando uma reta transversal corta duas retas paralelas, ela forma 8 ângulos com relações especiais entre si.<br><br><ul><li><strong>Alternos (Internos ou Externos):</strong> Estão em lados opostos da transversal. Eles são <strong>iguais</strong>.</li><li><strong>Colaterais (Internos ou Externos):</strong> Estão do mesmo lado da transversal. Eles são <strong>suplementares (somam 180°)</strong>.</li><li><strong>Correspondentes:</strong> Ocupam a "mesma posição" em cada cruzamento. Eles são <strong>iguais</strong>.</li></ul><span class="example-diagram">Saber identificar esses pares de ângulos é chave para resolver muitos problemas!</span>'
+                },
+                {
+                    title: '3. Triângulos: Classificação',
+                    content: 'Triângulos são polígonos de 3 lados. Podemos classificá-los de duas formas:<br><br><strong>Quanto aos Lados:</strong><ul><li><strong>Equilátero:</strong> Todos os 3 lados são iguais (e os 3 ângulos também, sempre 60°).</li><li><strong>Isósceles:</strong> Dois lados são iguais. Os ângulos da base (opostos aos lados iguais) também são iguais.</li><li><strong>Escaleno:</strong> Todos os 3 lados são diferentes (e os 3 ângulos também).</li></ul><br><strong>Quanto aos Ângulos:</strong><ul><li><strong>Acutângulo:</strong> Todos os 3 ângulos internos são agudos (< 90°).</li><li><strong>Retângulo:</strong> Possui um ângulo interno reto (90°).</li><li><strong>Obtusângulo:</strong> Possui um ângulo interno obtuso (> 90°).</li></ul>'
+                },
+                {
+                    title: '4. Triângulos: Soma dos Ângulos',
+                    content: 'A propriedade mais importante dos triângulos é a soma de seus ângulos internos.<br><br><strong>Soma dos Ângulos Internos:</strong> A soma dos três ângulos internos de qualquer triângulo é <strong>sempre igual a 180°</strong>.<div class="formula-box">Ângulo A + Ângulo B + Ângulo C = 180°</div><br><strong>Soma dos Ângulos Externos:</strong> A soma dos três ângulos externos de qualquer triângulo é <strong>sempre igual a 360°</strong>.<br><br><strong>Teorema do Ângulo Externo:</strong> A medida de um ângulo externo de um triângulo é igual à soma das medidas dos dois ângulos internos não adjacentes a ele.'
+                },
+                {
+                    title: '5. Polígonos: Fundamentos',
+                    content: 'Um polígono é uma figura plana e fechada, formada por segmentos de reta que não se cruzam.<br><br><strong>Soma dos Ângulos Internos (S<sub>i</sub>):</strong> A fórmula para encontrar a soma de todos os ângulos internos de um polígono com \'n\' lados é:<div class="formula-box">S<sub>i</sub> = (n - 2) * 180°</div><br><strong>Número de Diagonais (d):</strong> A fórmula para encontrar o total de diagonais de um polígono com \'n\' lados é:<div class="formula-box">d = [n * (n - 3)] / 2</div><br><strong>Polígono Regular:</strong> É um polígono que tem todos os lados e todos os ângulos internos com a mesma medida. Para achar o valor de um ângulo interno de um polígono regular, basta calcular a soma (S<sub>i</sub>) e dividir pelo número de lados (n).'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis
+                { question: "Qual a soma dos ângulos internos de um triângulo?", answer: "180°", options: ["90°", "180°", "360°", "Depende do triângulo"], explanation: "A soma dos ângulos internos de qualquer triângulo é sempre 180°." },
+                { question: "Um ângulo de 40° e um ângulo de 50° são:", answer: "Complementares", options: ["Suplementares", "Opostos pelo vértice", "Correspondentes", "Complementares"], explanation: "Dois ângulos são complementares quando a soma deles é 90°. (40° + 50° = 90°)." },
+                { question: "Um triângulo com todos os lados diferentes é chamado de:", answer: "Escaleno", options: ["Equilátero", "Isósceles", "Escaleno", "Retângulo"], explanation: "A classificação quanto aos lados define o triângulo com 3 lados diferentes como escaleno." },
+                { question: "Qual a soma dos ângulos internos de um quadrilátero?", answer: "360°", options: ["180°", "270°", "360°", "540°"], explanation: "Usando a fórmula S = (n-2)*180°, para n=4, temos S = (4-2)*180° = 2*180° = 360°." },
+                { question: "Um ângulo que mede exatamente 90° é chamado de:", answer: "Reto", options: ["Agudo", "Obtuso", "Raso", "Reto"], explanation: "Essa é a definição de um ângulo reto." },
+
+                // Médias
+                { question: "Dois ângulos de um triângulo medem 70° e 50°. Qual a medida do terceiro ângulo?", answer: "60°", options: ["50°", "60°", "70°", "80°"], explanation: "A soma deve ser 180°. 70° + 50° = 120°. O terceiro ângulo é 180° - 120° = 60°." },
+                { question: "Qual é o ângulo suplementar de um ângulo de 110°?", answer: "70°", options: ["20°", "70°", "90°", "250°"], explanation: "Ângulos suplementares somam 180°. O suplemento de 110° é 180° - 110° = 70°." },
+                { question: "Qual a soma dos ângulos internos de um pentágono (5 lados)?", answer: "540°", options: ["360°", "540°", "720°", "900°"], explanation: "Usando a fórmula S = (n-2)*180°, para n=5: S = (5-2)*180° = 3 * 180° = 540°." },
+                { question: "Um triângulo isósceles tem um ângulo do vértice (o ângulo diferente) medindo 40°. Quanto medem os outros dois ângulos da base?", answer: "70° cada", options: ["40° cada", "50° cada", "60° cada", "70° cada"], explanation: "Os 140° restantes (180-40) devem ser divididos igualmente entre os dois ângulos da base. 140/2 = 70°." },
+                { question: "Quantas diagonais tem um hexágono (6 lados)?", answer: "9 diagonais", options: ["6 diagonais", "9 diagonais", "12 diagonais", "15 diagonais"], explanation: "Usando a fórmula d = [n(n-3)]/2, para n=6: d = [6*(6-3)]/2 = [6*3]/2 = 18/2 = 9." },
+                { question: "Se duas retas paralelas são cortadas por uma transversal, e um dos ângulos agudos formados mede 65°, qual a medida de um dos ângulos obtusos?", answer: "115°", options: ["25°", "65°", "115°", "180°"], explanation: "O ângulo agudo e o obtuso no mesmo cruzamento são suplementares. 180° - 65° = 115°." },
+                { question: "Qual o valor de cada ângulo interno de um hexágono regular?", answer: "120°", options: ["108°", "120°", "135°", "140°"], explanation: "A soma dos ângulos é (6-2)*180° = 720°. Como é regular, todos os 6 ângulos são iguais. 720° / 6 = 120°." },
+                { question: "Os ângulos de um triângulo são x, 2x e 3x. Qual o valor de x?", answer: "30°", options: ["20°", "30°", "45°", "60°"], explanation: "A soma deve ser 180°: x + 2x + 3x = 180° => 6x = 180° => x = 30°." },
+                { question: "Se um ângulo e seu complementar têm a mesma medida, qual o valor desse ângulo?", answer: "45°", options: ["30°", "45°", "60°", "90°"], explanation: "Dois ângulos iguais que somam 90° só podem ser 45° cada (90/2)." },
+                { question: "Um triângulo pode ter dois ângulos retos?", answer: "Não", options: ["Sim", "Não", "Apenas se for isósceles", "Apenas se for escaleno"], explanation: "Não, pois se tivesse dois ângulos de 90°, a soma deles já seria 180°, e não sobraria nada para o terceiro ângulo." },
+
+                // Difíceis
+                { question: "A medida de um ângulo externo de um polígono regular é 40°. Que polígono é esse?", answer: "Nonágono (9 lados)", options: ["Octógono (8 lados)", "Nonágono (9 lados)", "Decágono (10 lados)", "Heptágono (7 lados)"], explanation: "A soma dos ângulos externos de qualquer polígono é 360°. Se cada ângulo externo mede 40°, o número de lados é 360° / 40° = 9. É um nonágono." },
+                { question: "Em um triângulo, o ângulo externo do vértice A mede 130°. Se o ângulo interno do vértice B mede 60°, qual a medida do ângulo interno do vértice C?", answer: "70°", options: ["50°", "60°", "70°", "80°"], explanation: "O ângulo externo (130°) é a soma dos internos não adjacentes (B e C). Então, 130° = 60° + C => C = 70°." },
+                { question: "A soma dos ângulos internos de um polígono é 1440°. Quantos lados tem esse polígono?", answer: "10 lados (decágono)", options: ["8 lados", "9 lados", "10 lados (decágono)", "12 lados"], explanation: "S = (n-2)*180 => 1440 = (n-2)*180 => 1440/180 = n-2 => 8 = n-2 => n = 10." },
+                { question: "Qual o número de diagonais que partem de um único vértice de um polígono de 15 lados?", answer: "12 diagonais", options: ["10 diagonais", "12 diagonais", "15 diagonais", "90 diagonais"], explanation: "De cada vértice partem diagonais para todos os outros vértices, exceto ele mesmo e seus dois vizinhos. Então, d = n - 3 = 15 - 3 = 12." },
+                { question: "Dois ângulos são suplementares. A medida de um deles é o triplo da medida do outro. Quais são as medidas desses ângulos?", answer: "45° e 135°", options: ["30° e 90°", "45° e 135°", "60° e 120°", "22,5° e 67,5°"], explanation: "Sejam os ângulos x e 3x. A soma é 180°: x + 3x = 180° => 4x = 180° => x = 45°. O outro é 3*45 = 135°." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

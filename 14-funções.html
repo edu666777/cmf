@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funções Afim e Quadrática - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .formula-box {
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Functions (Linear and Quadratic). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about functions for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Funções</h1>
+            <p class="text-slate-600 mt-2">Domine as funções do 1º e 2º graus (Afim e Quadrática)!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Entendendo as Funções</h2>
+                    <p class="mb-6 content-text">Uma função é como uma "máquina" matemática: você coloca um número (x) e ela te devolve outro número (y ou f(x)) seguindo uma regra específica. Vamos estudar as duas principais: a função afim e a quadrática.</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Função Afim (1º Grau):</strong> A lei de formação é <span class="term-highlight">f(x) = ax + b</span>. O gráfico é sempre uma <strong>reta</strong>.</li>
+                            <li><strong>Função Quadrática (2º Grau):</strong> A lei de formação é <span class="term-highlight">f(x) = ax² + bx + c</span>. O gráfico é sempre uma <strong>parábola</strong>.</li>
+                            <li><strong>Coeficientes:</strong> Identificar os coeficientes 'a', 'b' e 'c' é o primeiro passo para analisar qualquer função.</li>
+                            <li><strong>Raiz ou Zero da Função:</strong> É o valor de 'x' que faz com que y (ou f(x)) seja igual a zero. Graficamente, é onde a função corta o eixo X.</li>
+                            <li><strong>Concavidade da Parábola:</strong> Na função quadrática, se 'a' > 0, a parábola é "feliz" (boca para cima). Se 'a' < 0, a parábola é "triste" (boca para baixo).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. Função Afim (Função do 1º Grau)',
+                    content: 'A função afim é definida pela fórmula: <div class="formula-box">f(x) = ax + b</div>Onde \'a\' e \'b\' são números reais e \'a\' ≠ 0.<br><br><ul><li><strong>Coeficiente 'a' (Coeficiente Angular):</strong> Determina a inclinação da reta. Se a > 0, a reta é crescente. Se a < 0, a reta é decrescente.</li><li><strong>Coeficiente 'b' (Coeficiente Linear):</strong> É o ponto onde o gráfico <strong>corta o eixo y</strong>. É o valor de f(x) quando x=0.</li></ul><br><strong>Raiz ou Zero da Função:</strong> É o valor de x que faz f(x) = 0. Para encontrar, basta resolver a equação <span class="term-highlight">ax + b = 0</span>, que resulta em <span class="term-highlight">x = -b/a</span>. Graficamente, é o ponto onde a reta corta o eixo x.'
+                },
+                {
+                    title: '2. Função Quadrática (Função do 2º Grau)',
+                    content: 'A função quadrática é definida pela fórmula: <div class="formula-box">f(x) = ax² + bx + c</div>Onde \'a\', \'b\' e \'c\' são números reais e \'a\' ≠ 0.<br><br>O gráfico de uma função quadrática é sempre uma <strong>parábola</strong>.<br><br><ul><li><strong>Coeficiente 'a':</strong> Define a concavidade da parábola. Se <strong>a > 0</strong>, a parábola tem a concavidade voltada para <strong>cima</strong> (feliz 😊). Se <strong>a < 0</strong>, a parábola tem a concavidade voltada para <strong>baixo</strong> (triste 😟).</li><li><strong>Coeficiente 'c':</strong> Assim como na função afim, é o ponto onde a parábola <strong>corta o eixo y</strong>.</li></ul>'
+                },
+                {
+                    title: '3. Raízes ou Zeros da Função Quadrática',
+                    content: 'As raízes (ou zeros) de uma função quadrática são os valores de 'x' para os quais f(x) = 0. Para encontrá-los, resolvemos a equação do 2º grau <span class="term-highlight">ax² + bx + c = 0</span>, usando a <strong>Fórmula de Bhaskara</strong>.<br><br><strong>1. Calcular o Delta (Δ):</strong><div class="formula-box">Δ = b² - 4ac</div><br><strong>2. Aplicar a Fórmula de Bhaskara:</strong><div class="formula-box">x = (-b ± √Δ) / 2a</div><br><ul><li>Se <span class="term-highlight">Δ > 0</span>: a parábola corta o eixo x em <strong>dois pontos distintos</strong> (duas raízes reais).</li><li>Se <span class="term-highlight">Δ = 0</span>: a parábola toca o eixo x em <strong>um único ponto</strong> (uma raiz real).</li><li>Se <span class="term-highlight">Δ < 0</span>: a parábola <strong>não corta</strong> o eixo x (nenhuma raiz real).</li></ul>'
+                },
+                {
+                    title: '4. Vértice da Parábola',
+                    content: 'O vértice é o ponto de máximo ou de mínimo da parábola. Suas coordenadas (X<sub>v</sub>, Y<sub>v</sub>) são dadas pelas fórmulas:<br><br><div class="formula-box">X<sub>v</sub> = -b / 2a</div><div class="formula-box">Y<sub>v</sub> = -Δ / 4a</div><br><ul><li>Se a > 0 (concavidade para cima), o vértice é o <strong>ponto de mínimo</strong>.</li><li>Se a < 0 (concavidade para baixo), o vértice é o <strong>ponto de máximo</strong>.</li></ul>'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis
+                { question: "A função f(x) = 3x - 6 é classificada como:", answer: "Função Afim (1º Grau)", options: ["Função Quadrática", "Função Constante", "Função Afim (1º Grau)", "Função Exponencial"], explanation: "A função segue o formato f(x) = ax + b, com a=3 e b=-6, caracterizando uma função afim." },
+                { question: "Na função afim f(x) = -2x + 8, o gráfico corta o eixo y em qual ponto?", answer: "8", options: ["-2", "4", "8", "0"], explanation: "O coeficiente linear 'b' (neste caso, 8) indica o ponto onde a função corta o eixo y." },
+                { question: "O gráfico de uma função quadrática f(x) = ax² + bx + c é sempre uma:", answer: "Parábola", options: ["Reta", "Hipérbole", "Circunferência", "Parábola"], explanation: "Essa é a definição do gráfico de toda função do 2º grau." },
+                { question: "Na função quadrática f(x) = x² - 7x + 10, quais são os coeficientes a, b e c?", answer: "a=1, b=-7, c=10", options: ["a=1, b=7, c=10", "a=1, b=-7, c=10", "a=0, b=-7, c=10", "a=1, b=7, c=-10"], explanation: "'a' acompanha x² (1), 'b' acompanha x (-7), e 'c' é o termo independente (10)." },
+                { question: "Dada a função f(x) = 5x + 3, qual o valor de f(2)?", answer: "13", options: ["10", "8", "13", "28"], explanation: "Substituímos x por 2: f(2) = 5*(2) + 3 = 10 + 3 = 13." },
+
+                // Médias
+                { question: "Qual é a raiz (ou zero) da função f(x) = 4x - 12?", answer: "x = 3", options: ["x = -3", "x = 4", "x = 12", "x = 3"], explanation: "Para achar a raiz, fazemos f(x) = 0.  4x - 12 = 0 => 4x = 12 => x = 3." },
+                { question: "A parábola da função f(x) = -x² + 3x + 1 tem a concavidade voltada para:", answer: "Baixo", options: ["Cima", "Baixo", "Direita", "Esquerda"], explanation: "O coeficiente 'a' é -1. Como a < 0, a concavidade é voltada para baixo (parábola 'triste')." },
+                { question: "Dada a função f(x) = x² + 2x - 3, qual o valor de f(-3)?", answer: "0", options: ["12", "-18", "0", "6"], explanation: "f(-3) = (-3)² + 2*(-3) - 3 = 9 - 6 - 3 = 0. Isso significa que -3 é uma das raízes da função." },
+                { question: "Quais são as raízes da função quadrática f(x) = x² - 4x + 3?", answer: "{1, 3}", options: ["{-1, -3}", "{1, 3}", "{1, -3}", "{-1, 3}"], explanation: "Resolvendo por Bhaskara: Δ = (-4)² - 4*1*3 = 16-12 = 4. x = (4 ± √4)/2 = (4 ± 2)/2. As raízes são x'=6/2=3 e x''=2/2=1." },
+                { question: "Qual função afim f(x) = ax + b passa pelos pontos (0, 5) e (1, 7)?", answer: "f(x) = 2x + 5", options: ["f(x) = 5x + 2", "f(x) = 7x + 5", "f(x) = 2x + 5", "f(x) = x + 5"], explanation: "O ponto (0,5) nos diz que b=5. Usando o ponto (1,7): 7 = a*(1) + 5 => 7 = a + 5 => a = 2. A função é f(x) = 2x + 5." },
+                { question: "Uma corrida de táxi custa R$ 5,00 (bandeirada) mais R$ 2,00 por quilômetro rodado (x). Qual função representa o preço da corrida?", answer: "f(x) = 2x + 5", options: ["f(x) = 5x + 2", "f(x) = 7x", "f(x) = 5x - 2", "f(x) = 2x + 5"], explanation: "O valor fixo (R$ 5,00) é o coeficiente 'b' e o valor variável por km (R$ 2,00) é o coeficiente 'a'." },
+                { question: "Se uma função quadrática tem Δ = 0, o que isso significa para seu gráfico?", answer: "A parábola toca o eixo x em um único ponto", options: ["A parábola não toca o eixo x", "A parábola toca o eixo x em um único ponto", "A parábola corta o eixo x em dois pontos", "A parábola tem a boca para cima"], explanation: "Quando Δ = 0, existe apenas uma raiz real, que corresponde ao vértice da parábola tocando o eixo x." },
+                { question: "A função f(x) = -5x + 10 é:", answer: "Decrescente", options: ["Crescente", "Decrescente", "Constante", "Quadrática"], explanation: "O coeficiente angular 'a' é -5. Como a < 0, a função é decrescente." },
+                { question: "Quais são os zeros da função f(x) = x² - 25?", answer: "x = 5 e x = -5", options: ["x = 5", "x = 25 e x = -25", "x = 5 e x = -5", "Não tem zeros reais"], explanation: "Fazendo f(x) = 0: x² - 25 = 0 => x² = 25 => x = ±√25. As raízes são 5 e -5." },
+                
+                // Difíceis
+                { question: "O vértice da parábola da função f(x) = x² - 6x + 5 é o ponto:", answer: "(3, -4)", options: ["(-6, 5)", "(3, 4)", "(3, -4)", "(-3, 32)"], explanation: "Xv = -b/2a = -(-6)/(2*1) = 6/2 = 3. Yv = -(Δ)/4a. Δ=36-20=16. Yv = -16/(4*1) = -4. Vértice: (3, -4)." },
+                { question: "A trajetória de uma bola é descrita por h(t) = -t² + 8t, onde h é a altura e t é o tempo. Qual a altura máxima atingida pela bola?", answer: "16 metros", options: ["8 metros", "16 metros", "32 metros", "64 metros"], explanation: "A altura máxima é o Y do vértice. Yv = -Δ/4a. Δ = 8²-4*(-1)*0 = 64. Yv = -64/(4*(-1)) = -64/-4 = 16." },
+                { question: "Qual a lei da função afim cujo gráfico passa por (2, 3) e (-1, 9)?", answer: "f(x) = -2x + 7", options: ["f(x) = 2x - 1", "f(x) = -2x + 7", "f(x) = 3x - 3", "f(x) = -3x + 9"], explanation: "Montamos um sistema: 3=2a+b e 9=-a+b. Subtraindo a segunda da primeira: -6=3a => a=-2. Substituindo a=-2 em 3=2a+b => 3=2(-2)+b => 3=-4+b => b=7. A função é f(x) = -2x + 7." },
+                { question: "Para que valor de 'k' a função f(x) = kx² - 4x + 1 não possui raízes reais?", answer: "k > 4", options: ["k < 4", "k > 4", "k = 4", "k < -4"], explanation: "Para não ter raiz real, Δ < 0. Δ = (-4)² - 4*k*1 = 16 - 4k.  16 - 4k < 0 => 16 < 4k => 4 < k, ou seja, k > 4." },
+                { question: "O lucro de uma empresa é dado por L(x) = -x² + 10x - 16, onde x é a quantidade de peças vendidas. Qual a quantidade de peças para atingir o lucro máximo?", answer: "5 peças", options: ["10 peças", "16 peças", "5 peças", "8 peças"], explanation: "A quantidade para lucro máximo é o X do vértice. Xv = -b/2a = -(10)/(2*(-1)) = -10/-2 = 5." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

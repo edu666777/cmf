@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teorema de Pitágoras - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .formula-box {
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.25rem;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of the Pythagorean Theorem (definitions, formula, applications). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about the Pythagorean Theorem for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Teorema de Pitágoras</h1>
+            <p class="text-slate-600 mt-2">Domine a relação mais famosa dos triângulos retângulos!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Decifrando o Teorema de Pitágoras</h2>
+                    <p class="mb-6 content-text">O Teorema de Pitágoras é uma das ferramentas mais poderosas da geometria. Ele descreve uma relação especial que existe em todos os triângulos retângulos, permitindo-nos encontrar medidas desconhecidas.</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Exclusivo para Triângulos Retângulos:</strong> O teorema SÓ funciona se o triângulo tiver um ângulo de 90°.</li>
+                            <li><strong>Identifique a Hipotenusa:</strong> É sempre o lado maior, oposto ao ângulo reto. Errar quem é a hipotenusa é o erro mais comum!</li>
+                            <li><strong>A Fórmula é a Chave:</strong> <span class="term-highlight">a² = b² + c²</span>. Decore isso!</li>
+                            <li><strong>Ternos Pitagóricos:</strong> Alguns trios de números inteiros sempre formam triângulos retângulos (ex: 3, 4, 5; 5, 12, 13). Conhecê-los pode poupar tempo.</li>
+                            <li><strong>Raiz Quadrada:</strong> No final dos cálculos, você quase sempre precisará calcular uma raiz quadrada para encontrar a medida do lado.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. O que é um Triângulo Retângulo?',
+                    content: 'Um triângulo retângulo é qualquer triângulo que possui um <strong>ângulo reto</strong>, ou seja, um ângulo de exatamente 90°. O Teorema de Pitágoras só funciona para este tipo de triângulo.<br><br>Os lados de um triângulo retângulo têm nomes especiais:<ul><li><strong>Hipotenusa:</strong> É o lado <strong>oposto</strong> ao ângulo de 90° e é sempre o <strong>maior lado</strong>.</li><li><strong>Catetos:</strong> São os dois lados que <strong>formam</strong> o ângulo de 90°.</li></ul>'
+                },
+                {
+                    title: '2. O Enunciado do Teorema',
+                    content: 'O Teorema de Pitágoras afirma que, em qualquer triângulo retângulo, "a soma dos quadrados das medidas dos catetos é igual ao quadrado da medida da hipotenusa".<br><br>Se chamarmos a hipotenusa de 'a' e os catetos de 'b' e 'c', a fórmula fica assim:<div class="formula-box">a² = b² + c²</div><span class="example-diagram">Esta é uma das fórmulas mais importantes da geometria!</span>'
+                },
+                {
+                    title: '3. Exemplo: Calculando a Hipotenusa',
+                    content: 'Imagine um triângulo retângulo cujos catetos medem 6 cm e 8 cm. Qual a medida da hipotenusa (vamos chamar de 'x')?<br><br><strong>1. Identificar os lados:</strong><br>Catetos: b = 6, c = 8<br>Hipotenusa: a = x<br><br><strong>2. Aplicar a fórmula:</strong><br><span class="term-highlight">a² = b² + c²</span><br><span class="term-highlight">x² = 6² + 8²</span><br><br><strong>3. Resolver:</strong><br>x² = 36 + 64<br>x² = 100<br>x = √100<br><strong>x = 10 cm</strong>'
+                },
+                {
+                    title: '4. Exemplo: Calculando um Cateto',
+                    content: 'Agora, imagine um triângulo retângulo com hipotenusa medindo 13 cm e um dos catetos medindo 5 cm. Qual a medida do outro cateto (vamos chamar de 'y')?<br><br><strong>1. Identificar os lados:</strong><br>Hipotenusa: a = 13<br>Catetos: b = 5, c = y<br><br><strong>2. Aplicar a fórmula:</strong><br><span class="term-highlight">a² = b² + c²</span><br><span class="term-highlight">13² = 5² + y²</span><br><br><strong>3. Resolver:</strong><br>169 = 25 + y²<br>169 - 25 = y²<br>144 = y²<br>y = √144<br><strong>y = 12 cm</strong>'
+                },
+                {
+                    title: '5. A Recíproca do Teorema e os Ternos Pitagóricos',
+                    content: 'O teorema também funciona ao contrário! Se você tem um triângulo com lados 'a', 'b' e 'c', e a relação <span class="term-highlight">a² = b² + c²</span> for verdadeira (onde 'a' é o maior lado), então você pode garantir que esse triângulo é um triângulo retângulo.<br><br><strong>Ternos Pitagóricos</strong> são conjuntos de três números inteiros que satisfazem o Teorema de Pitágoras. Conhecer alguns deles pode ajudar a resolver problemas mais rápido!<br><em>Exemplos famosos:</em><ul><li>(3, 4, 5) &rarr; 5² = 3² + 4² (25 = 9 + 16)</li><li>(5, 12, 13) &rarr; 13² = 5² + 12² (169 = 25 + 144)</li><li>(8, 15, 17) &rarr; 17² = 8² + 15² (289 = 64 + 225)</li></ul>E também os seus múltiplos, como (6, 8, 10), que é o dobro de (3, 4, 5).'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis
+                { question: "O Teorema de Pitágoras se aplica a qual tipo de triângulo?", answer: "Apenas a triângulos retângulos", options: ["Triângulos equiláteros", "Triângulos isósceles", "Todos os triângulos", "Apenas a triângulos retângulos"], explanation: "A relação a² = b² + c² só é válida para triângulos que possuem um ângulo reto (90°)." },
+                { question: "Em um triângulo retângulo, qual é o nome do lado maior, oposto ao ângulo de 90°?", answer: "Hipotenusa", options: ["Cateto Adjacente", "Cateto Oposto", "Hipotenusa", "Base"], explanation: "A hipotenusa é sempre o maior lado de um triângulo retângulo." },
+                { question: "Qual é a fórmula do Teorema de Pitágoras?", answer: "a² = b² + c²", options: ["a = b + c", "a² = b² - c²", "a² = b² + c²", "a + b = c"], explanation: "O quadrado da hipotenusa (a) é igual à soma dos quadrados dos catetos (b e c)." },
+                { question: "Os catetos de um triângulo retângulo medem 3 cm e 4 cm. Qual a medida da hipotenusa?", answer: "5 cm", options: ["5 cm", "6 cm", "7 cm", "25 cm"], explanation: "Usando a fórmula: a² = 3² + 4² => a² = 9 + 16 => a² = 25 => a = √25 = 5 cm. Este é o famoso terno pitagórico (3, 4, 5)." },
+                { question: "Qual dos seguintes é um Terno Pitagórico?", answer: "(5, 12, 13)", options: ["(1, 2, 3)", "(5, 12, 13)", "(4, 5, 6)", "(2, 3, 4)"], explanation: "Verificamos se 13² = 5² + 12². 169 = 25 + 144 => 169 = 169. A igualdade é verdadeira." },
+
+                // Médias
+                { question: "A hipotenusa de um triângulo retângulo mede 10 cm e um dos catetos mede 6 cm. Qual a medida do outro cateto?", answer: "8 cm", options: ["4 cm", "8 cm", "16 cm", "64 cm"], explanation: "10² = 6² + c² => 100 = 36 + c² => c² = 100 - 36 = 64 => c = √64 = 8 cm. Este é um múltiplo do terno (3, 4, 5)." },
+                { question: "Um poste vertical é preso por um cabo de aço de 15 m de comprimento. A base do cabo está a 9 m de distância do poste no chão. Qual a altura do poste?", answer: "12 m", options: ["10 m", "12 m", "15 m", "24 m"], explanation: "O cabo é a hipotenusa (15), a distância no chão é um cateto (9). A altura (h) é o outro cateto. 15² = 9² + h² => 225 = 81 + h² => h² = 144 => h = 12 m." },
+                { question: "Qual a medida da diagonal de um quadrado de lado 7 cm?", answer: "7√2 cm", options: ["7 cm", "14 cm", "7√2 cm", "49 cm"], explanation: "A diagonal (d) e dois lados (L) formam um triângulo retângulo. d² = L² + L² = 7² + 7² = 49 + 49 = 98. d = √98 = √(49*2) = 7√2 cm." },
+                { question: "Um triângulo tem lados medindo 8 cm, 10 cm e 13 cm. Este triângulo é retângulo?", answer: "Não", options: ["Sim", "Não"], explanation: "Se fosse retângulo, 13 seria a hipotenusa. Verificando: 13² = 8² + 10² => 169 = 64 + 100 => 169 = 164. Como a igualdade é falsa, o triângulo não é retângulo." },
+                { question: "Os catetos de um triângulo retângulo medem 5 cm e 5 cm. Qual a medida da hipotenusa?", answer: "5√2 cm", options: ["5 cm", "10 cm", "5√2 cm", "50 cm"], explanation: "a² = 5² + 5² = 25 + 25 = 50. a = √50 = √(25*2) = 5√2 cm." },
+                { question: "Uma escada de 5 metros de comprimento está apoiada em uma parede. O pé da escada está a 3 metros da base da parede. A que altura a escada toca a parede?", answer: "4 metros", options: ["2 metros", "3 metros", "4 metros", "5 metros"], explanation: "A escada é a hipotenusa (5) e a distância no chão é um cateto (3). A altura (h) é o outro cateto. 5² = 3² + h² => 25 = 9 + h² => h² = 16 => h = 4 metros." },
+                { question: "A diagonal de um retângulo mede 20 cm e um dos lados mede 12 cm. Qual a medida do outro lado?", answer: "16 cm", options: ["8 cm", "14 cm", "16 cm", "24 cm"], explanation: "A diagonal e os lados formam um triângulo retângulo. A diagonal é a hipotenusa. 20² = 12² + L² => 400 = 144 + L² => L² = 256 => L = 16 cm." },
+                
+                // Difíceis
+                { question: "A altura de um triângulo equilátero de lado 10 cm é:", answer: "5√3 cm", options: ["5 cm", "10 cm", "5√3 cm", "10√3 cm"], explanation: "A altura divide o triângulo equilátero em dois triângulos retângulos de hipotenusa 10 e cateto 5 (metade da base). h² + 5² = 10² => h² + 25 = 100 => h² = 75 => h = √75 = √(25*3) = 5√3 cm." },
+                { question: "Em um losango, as diagonais medem 10 cm e 24 cm. Qual a medida do lado do losango?", answer: "13 cm", options: ["12 cm", "13 cm", "17 cm", "26 cm"], explanation: "As diagonais se cortam ao meio, formando 4 triângulos retângulos com catetos de 5 cm (10/2) e 12 cm (24/2). O lado do losango é a hipotenusa. L² = 5² + 12² = 25 + 144 = 169 => L = 13 cm." },
+                { question: "Um avião voa 12 km para o leste e depois 16 km para o norte. Qual a distância em linha reta do ponto de partida ao ponto de chegada?", answer: "20 km", options: ["18 km", "20 km", "24 km", "28 km"], explanation: "O percurso forma um triângulo retângulo com catetos 12 e 16. A distância em linha reta é a hipotenusa. d² = 12² + 16² = 144 + 256 = 400 => d = 20 km." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>

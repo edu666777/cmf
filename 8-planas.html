@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área e Perímetro de Figuras Planas - 9º Ano: Aprenda e Pratique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-button.active {
+            background-color: #0369a1; /* Sky-700 */
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .accordion-button.open + .accordion-content {
+            max-height: 4000px; /* Increased max-height for potentially longer content */
+        }
+        .quiz-option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .correct-answer {
+            background-color: #10b981 !important; /* Emerald-500 */
+            color: white !important;
+            border-color: #059669 !important; /* Emerald-600 */
+        }
+        .wrong-answer {
+            background-color: #ef4444 !important; /* Red-500 */
+            color: white !important;
+            border-color: #dc2626 !important; /* Red-600 */
+        }
+        .content-text { /* General text styling for readability */
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .term-highlight {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f3f4f6; /* gray-100 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+        }
+        .example-diagram {
+            font-style: italic;
+            color: #075985; /* sky-800 for example sentences */
+            margin-left: 1rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+         .quiz-question-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap; /* To respect newlines in the question text */
+        }
+        .quiz-option {
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .formula-box {
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals with Sky Blue accent (Consistent with previous apps) -->
+    <!-- Application Structure Plan: Two-section SPA. 'Aprender' section uses an accordion for step-by-step explanations of Area and Perimeter (definitions, formulas for main plane figures). 'Praticar' section is an interactive quiz with immediate feedback and score tracking, using a "retry on error" logic. This structure separates learning from application, aiding comprehension and retention. Navigation is via two main buttons. -->
+    <!-- Visualization & Content Choices: Report Info: Simplified concepts about area and perimeter for 9th grade -> Goal: Inform/Organize -> Viz/Presentation: Accordion in 'Aprender'. Interaction: Expand/collapse. Justification: Breaks down mathematical information into digestible steps. Report Info: Age-appropriate problems & solutions -> Goal: Test knowledge/Compare -> Viz/Presentation: Interactive quiz in 'Praticar'. Interaction: Clickable answers, feedback, retry on error. Justification: Active learning, mastery-based reinforcement. Library/Method: Vanilla JS & Tailwind CSS. Content presented as styled text. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-100 text-slate-800">
+
+    <div class="container mx-auto max-w-4xl p-4 sm:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-800">Matemática - 9º Ano: Área e Perímetro</h1>
+            <p class="text-slate-600 mt-2">Domine o cálculo do contorno e da superfície das principais figuras planas!</p>
+        </header>
+
+        <nav class="flex justify-center mb-8 bg-white p-2 rounded-lg shadow-sm">
+            <button id="btn-learn" class="tab-button active flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Aprender</button>
+            <button id="btn-practice" class="tab-button flex-1 sm:flex-none text-center py-2 px-6 font-semibold rounded-md transition-colors duration-300">Praticar</button>
+        </nav>
+
+        <main>
+            <section id="learn-section">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-4 text-sky-700">Calculando Áreas e Perímetros</h2>
+                    <p class="mb-6 content-text">Saber calcular o perímetro e a área de figuras planas é uma habilidade essencial, usada desde a compra de um terreno até a reforma de um quarto. Vamos aprender as fórmulas e como aplicá-las!</p>
+                    
+                    <div id="accordion-container" class="space-y-3">
+                    </div>
+
+                    <div class="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
+                        <h3 class="font-bold text-lg text-sky-800">💡 Fique Ligado!</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700 content-text">
+                            <li><strong>Perímetro é o Contorno:</strong> Para calcular o perímetro, você simplesmente <strong>soma</strong> a medida de todos os lados da figura. A unidade é linear (cm, m, km).</li>
+                            <li><strong>Área é a Superfície:</strong> A área mede o espaço interno da figura. Cada figura tem sua própria fórmula. A unidade é quadrada (cm², m², km²).</li>
+                            <li><strong>Altura (h):</strong> A altura de uma figura é sempre uma medida <strong>perpendicular</strong> (forma um ângulo de 90°) com a base. Cuidado para não confundi-la com o lado inclinado em paralelogramos e trapézios!</li>
+                            <li><strong>Pi (π):</strong> Para círculos, use o valor de π que o problema fornecer. Se não disser nada, pode usar 3,14 como aproximação.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="practice-section" class="hidden">
+                 <div class="bg-white p-6 rounded-lg shadow">
+                    <h2 class="text-2xl font-bold mb-2 text-sky-700">Hora de Praticar para a Prova!</h2>
+                    <p class="mb-6 content-text">Resolva os problemas abaixo. Se errar, a pergunta voltará para você tentar de novo. O quiz só termina quando você acertar todas as questões!</p>
+
+                    <div id="quiz-container">
+                        <p id="question-progress" class="text-center font-semibold text-slate-600 mb-4"></p>
+                        <div id="question-area" class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-center">
+                            <!-- Question text will be injected here -->
+                        </div>
+                        <div id="options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <!-- Options will be injected here -->
+                        </div>
+                        <div id="feedback-container" class="mt-4 p-4 rounded-lg text-center hidden">
+                            <p id="feedback-text" class="font-semibold"></p>
+                            <p id="feedback-explanation" class="text-sm mt-1"></p>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="next-question-btn" class="hidden py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Próxima</button>
+                        </div>
+                    </div>
+                    
+                    <div id="score-container" class="hidden text-center py-8">
+                        <h3 class="text-2xl font-bold text-sky-800">Quiz Finalizado!</h3>
+                        <p id="score-text" class="text-lg mt-2"></p>
+                        <div id="score-visual" class="w-full bg-stone-200 rounded-full h-4 my-4 overflow-hidden">
+                            <div id="score-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500"></div>
+                        </div>
+                        <button id="restart-quiz-btn" class="mt-6 py-2 px-8 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 transition-colors">Tentar Novamente</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const learnSection = document.getElementById('learn-section');
+            const practiceSection = document.getElementById('practice-section');
+            const btnLearn = document.getElementById('btn-learn');
+            const btnPractice = document.getElementById('btn-practice');
+
+            const accordionContainer = document.getElementById('accordion-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const scoreContainer = document.getElementById('score-container');
+            const questionProgress = document.getElementById('question-progress');
+            const questionArea = document.getElementById('question-area'); 
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackText = document.getElementById('feedback-text');
+            const feedbackExplanation = document.getElementById('feedback-explanation');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            const restartQuizBtn = document.getElementById('restart-quiz-btn');
+            const scoreTextElement = document.getElementById('score-text');
+            const scoreBar = document.getElementById('score-bar');
+
+            const learnData = [
+                {
+                    title: '1. Quadrado',
+                    content: '<strong>Perímetro (P):</strong> Soma dos 4 lados iguais.<div class="formula-box">P = 4 * lado</div><br><strong>Área (A):</strong> Lado vezes lado.<div class="formula-box">A = lado * lado = lado²</div>'
+                },
+                {
+                    title: '2. Retângulo',
+                    content: '<strong>Perímetro (P):</strong> Soma de duas vezes a base (comprimento) e duas vezes a altura (largura).<div class="formula-box">P = 2 * (base + altura)</div><br><strong>Área (A):</strong> Base vezes altura.<div class="formula-box">A = base * altura</div>'
+                },
+                {
+                    title: '3. Paralelogramo',
+                    content: '<strong>Perímetro (P):</strong> Soma de duas vezes um lado e duas vezes o outro lado adjacente.<div class="formula-box">P = 2 * (lado1 + lado2)</div><br><strong>Área (A):</strong> Base vezes a altura perpendicular.<div class="formula-box">A = base * altura</div><span class="example-diagram">Atenção: A altura não é o lado inclinado!</span>'
+                },
+                {
+                    title: '4. Triângulo',
+                    content: '<strong>Perímetro (P):</strong> Soma dos três lados.<div class="formula-box">P = lado1 + lado2 + lado3</div><br><strong>Área (A):</strong> Metade do produto da base pela altura.<div class="formula-box">A = (base * altura) / 2</div>'
+                },
+                {
+                    title: '5. Losango',
+                    content: '<strong>Perímetro (P):</strong> Soma dos 4 lados iguais.<div class="formula-box">P = 4 * lado</div><br><strong>Área (A):</strong> Metade do produto das suas duas diagonais (D = diagonal maior, d = diagonal menor).<div class="formula-box">A = (D * d) / 2</div>'
+                },
+                {
+                    title: '6. Trapézio',
+                    content: '<strong>Perímetro (P):</strong> Soma de todos os quatro lados.<div class="formula-box">P = Base maior + base menor + lado1 + lado2</div><br><strong>Área (A):</strong> Soma das bases, vezes a altura, dividido por 2 (B = base maior, b = base menor).<div class="formula-box">A = [(B + b) * altura] / 2</div>'
+                },
+                {
+                    title: '7. Círculo',
+                    content: '<strong>Perímetro (Comprimento da Circunferência - C):</strong> Duas vezes Pi vezes o raio.<div class="formula-box">C = 2 * π * raio</div><br><strong>Área (A):</strong> Pi vezes o raio ao quadrado.<div class="formula-box">A = π * raio²</div>'
+                }
+            ];
+
+            const quizData = [
+                // Fáceis
+                { question: "Qual a área de um quadrado com lado de 5 cm?", answer: "25 cm²", options: ["20 cm²", "25 cm²", "10 cm²", "5 cm²"], explanation: "A área do quadrado é lado ao quadrado. A = 5² = 25 cm²." },
+                { question: "Qual o perímetro de um retângulo com lados medindo 10 m e 4 m?", answer: "28 m", options: ["14 m", "40 m", "28 m", "24 m"], explanation: "O perímetro é a soma de todos os lados. P = 10 + 10 + 4 + 4 = 28 m." },
+                { question: "A base de um triângulo mede 8 cm e sua altura é 5 cm. Qual é sua área?", answer: "20 cm²", options: ["40 cm²", "13 cm²", "20 cm²", "26 cm²"], explanation: "A área do triângulo é (base * altura) / 2. A = (8 * 5) / 2 = 40 / 2 = 20 cm²." },
+                { question: "Calcule a área de um círculo com raio de 10 cm. (Use π = 3,14)", answer: "314 cm²", options: ["31,4 cm²", "62,8 cm²", "314 cm²", "100 cm²"], explanation: "A área do círculo é π * r². A = 3,14 * (10)² = 3,14 * 100 = 314 cm²." },
+                { question: "O perímetro de um quadrado é 32 cm. Qual a medida de seu lado?", answer: "8 cm", options: ["4 cm", "8 cm", "16 cm", "32 cm"], explanation: "O perímetro do quadrado é 4 * lado. Se 4 * lado = 32, então o lado = 32 / 4 = 8 cm." },
+
+                // Médias
+                { question: "As diagonais de um losango medem 10 cm e 6 cm. Qual é a sua área?", answer: "30 cm²", options: ["16 cm²", "60 cm²", "32 cm²", "30 cm²"], explanation: "A área do losango é (Diagonal maior * diagonal menor) / 2. A = (10 * 6) / 2 = 60 / 2 = 30 cm²." },
+                { question: "Um campo de futebol retangular tem 100 m de comprimento e 70 m de largura. Qual é a sua área?", answer: "7000 m²", options: ["170 m²", "340 m²", "700 m²", "7000 m²"], explanation: "A área do retângulo é base * altura. A = 100 * 70 = 7000 m²." },
+                { question: "Um trapézio tem bases medindo 12 cm e 8 cm, e altura de 5 cm. Qual é a sua área?", answer: "50 cm²", options: ["25 cm²", "50 cm²", "100 cm²", "480 cm²"], explanation: "A área do trapézio é [(Base maior + base menor) * altura] / 2. A = [(12 + 8) * 5] / 2 = [20 * 5] / 2 = 100 / 2 = 50 cm²." },
+                { question: "A área de um retângulo é 48 m² e um de seus lados mede 6 m. Qual o seu perímetro?", answer: "28 m", options: ["14 m", "24 m", "28 m", "54 m"], explanation: "Primeiro, ache o outro lado: Área = b*h => 48 = 6*h => h = 8 m. Agora, o perímetro: P = 2*(6+8) = 2*14 = 28 m." },
+                { question: "Qual o comprimento de uma circunferência (perímetro) com raio de 5 cm? (Use π = 3,14)", answer: "31,4 cm", options: ["15,7 cm", "31,4 cm", "78,5 cm", "25 cm"], explanation: "O comprimento é 2 * π * r. C = 2 * 3,14 * 5 = 10 * 3,14 = 31,4 cm." },
+                { question: "A área de um quadrado é 81 cm². Qual é o seu perímetro?", answer: "36 cm", options: ["9 cm", "18 cm", "36 cm", "81 cm"], explanation: "Se a Área = lado², então o lado = √Área. Lado = √81 = 9 cm. O perímetro é 4 * lado = 4 * 9 = 36 cm." },
+                { question: "A base de um paralelogramo mede 15 cm e sua altura relativa a essa base mede 4 cm. Qual a sua área?", answer: "60 cm²", options: ["19 cm²", "38 cm²", "60 cm²", "30 cm²"], explanation: "A área do paralelogramo é base * altura. A = 15 * 4 = 60 cm²." },
+                { question: "O lado de um losango mede 10 cm e uma de suas diagonais mede 12 cm. Para calcular a área, qual o primeiro passo?", answer: "Usar o Teorema de Pitágoras para achar a outra diagonal", options: ["Multiplicar 10 por 12", "Achar o perímetro", "Usar o Teorema de Pitágoras para achar a outra diagonal", "Dividir 12 por 10"], explanation: "As diagonais se cortam ao meio e são perpendiculares, formando 4 triângulos retângulos. A hipotenusa é o lado (10) e um cateto é metade da diagonal (6). O outro cateto (metade da outra diagonal) pode ser achado por Pitágoras." },
+                { question: "Um jardim circular tem diâmetro de 20 metros. Qual a sua área? (Use π = 3)", answer: "300 m²", options: ["60 m²", "1200 m²", "300 m²", "75 m²"], explanation: "Se o diâmetro é 20 m, o raio é 10 m. A área é π * r² = 3 * (10)² = 3 * 100 = 300 m²." },
+                { question: "O perímetro de um triângulo equilátero (3 lados iguais) é 24 cm. Qual a medida de cada lado?", answer: "8 cm", options: ["6 cm", "8 cm", "12 cm", "24 cm"], explanation: "Se os três lados são iguais, basta dividir o perímetro por 3: 24 / 3 = 8 cm." },
+
+                // Difíceis
+                { question: "Qual a área de um losango cujo lado mede 5 cm e uma das diagonais mede 8 cm?", answer: "24 cm²", options: ["20 cm²", "24 cm²", "30 cm²", "40 cm²"], explanation: "As diagonais se cruzam ao meio formando 4 triângulos retângulos de hipotenusa 5 e cateto 4 (8/2). Pelo Teorema de Pitágoras (5²=4²+c²), o outro cateto é 3. A outra diagonal mede 2*3=6 cm. Área = (8*6)/2 = 24 cm²." },
+                { question: "A área de um trapézio é 70 m². Sua altura é 7 m e a base menor mede 6 m. Qual a medida da base maior?", answer: "14 m", options: ["10 m", "12 m", "14 m", "20 m"], explanation: "A = [(B+b)*h]/2 => 70 = [(B+6)*7]/2 => 140 = (B+6)*7 => 20 = B+6 => B = 14 m." },
+                { question: "Um pneu de bicicleta tem 40 cm de raio. Qual a distância percorrida, aproximadamente, em uma volta completa? (Use π = 3,14)", answer: "251,2 cm", options: ["125,6 cm", "251,2 cm", "5024 cm", "400 cm"], explanation: "A distância de uma volta é o comprimento da circunferência: C = 2 * π * r = 2 * 3,14 * 40 = 251,2 cm." },
+                { question: "Aumentando o lado de um quadrado em 20%, em qual porcentagem sua área aumenta?", answer: "44%", options: ["20%", "40%", "44%", "144%"], explanation: "Seja o lado L=10. Área=100. Aumentando 20%, o novo lado é 12. A nova área é 12*12=144. O aumento foi de 44 (de 100 para 144), o que corresponde a 44%." },
+                { question: "Um terreno retangular de 15m por 20m tem uma piscina quadrada de 8m de lado no centro. Qual a área gramada do terreno?", answer: "236 m²", options: ["300 m²", "64 m²", "236 m²", "364 m²"], explanation: "Área total do terreno = 15 * 20 = 300 m². Área da piscina = 8 * 8 = 64 m². A área gramada é a diferença: 300 - 64 = 236 m²." }
+            ];
+            
+            let lastAnswerWasCorrect = false;
+            let score = 0;
+            let shuffledQuizData = [];
+
+            function switchView(view) {
+                if (view === 'learn') {
+                    learnSection.classList.remove('hidden');
+                    practiceSection.classList.add('hidden');
+                    btnLearn.classList.add('active');
+                    btnPractice.classList.remove('active');
+                } else {
+                    learnSection.classList.add('hidden');
+                    practiceSection.classList.remove('hidden');
+                    btnLearn.classList.remove('active');
+                    btnPractice.classList.add('active');
+                    startQuiz();
+                }
+            }
+
+            btnLearn.addEventListener('click', () => switchView('learn'));
+            btnPractice.addEventListener('click', () => switchView('practice'));
+
+            function createAccordion() {
+                accordionContainer.innerHTML = '';
+                learnData.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'border border-stone-200 rounded-lg';
+                    div.innerHTML = `
+                        <button class="accordion-button w-full p-4 text-left font-semibold text-lg flex justify-between items-center hover:bg-stone-50 transition-colors">
+                            <span>${item.title}</span>
+                            <span class="transform transition-transform duration-300 text-sky-600">&#9662;</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 border-t border-stone-200 text-slate-700 prose max-w-none content-text">
+                                ${item.content}
+                            </div>
+                        </div>
+                    `;
+                    accordionContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.accordion-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const icon = button.querySelector('span:last-child');
+                        const isOpen = button.classList.toggle('open');
+                        icon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                        if (isOpen) {
+                            document.querySelectorAll('.accordion-button.open').forEach(openButton => {
+                                if (openButton !== button) {
+                                    openButton.classList.remove('open');
+                                    openButton.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            function startQuiz() {
+                score = 0;
+                shuffledQuizData = shuffleArray([...quizData]);
+                quizContainer.classList.remove('hidden');
+                scoreContainer.classList.add('hidden');
+                showQuestion();
+            }
+
+            function showQuestion() {
+                feedbackContainer.classList.add('hidden');
+                nextQuestionBtn.classList.add('hidden');
+
+                const questionData = shuffledQuizData[0];
+                questionProgress.textContent = `Questões restantes: ${shuffledQuizData.length}`;
+                
+                questionArea.innerHTML = `<p class="quiz-question-text">${questionData.question}</p>`;
+
+                optionsContainer.innerHTML = '';
+                let currentOptions = shuffleArray([...questionData.options]); 
+
+                currentOptions.forEach(option => {
+                    const button = document.createElement('button');
+                    button.innerHTML = option; 
+                    button.className = "quiz-option w-full p-3 border-2 border-stone-300 rounded-lg hover:bg-stone-200 transition-colors";
+                    button.addEventListener('click', () => selectAnswer(option, questionData.answer, questionData.explanation));
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            function selectAnswer(selectedOption, correctAnswer, explanation) {
+                const buttons = optionsContainer.querySelectorAll('button');
+                lastAnswerWasCorrect = selectedOption === correctAnswer;
+
+                if (lastAnswerWasCorrect) {
+                    score++;
+                    feedbackText.textContent = '🎉 Correto!';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-emerald-100 border border-emerald-200 text-emerald-800';
+                } else {
+                    feedbackText.textContent = '🤔 Incorreto! Esta pergunta aparecerá novamente.';
+                    feedbackContainer.className = 'mt-4 p-4 rounded-lg text-center bg-red-100 border border-red-200 text-red-800';
+                }
+
+                feedbackExplanation.innerHTML = `<strong>Explicação:</strong> ${explanation}`;
+                feedbackContainer.classList.remove('hidden');
+
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if (button.innerHTML === correctAnswer) { 
+                        button.classList.add('correct-answer');
+                    } else if (button.innerHTML === selectedOption && !lastAnswerWasCorrect) {
+                        button.classList.add('wrong-answer');
+                    }
+                });
+
+                nextQuestionBtn.classList.remove('hidden');
+            }
+            
+            function showScore() {
+                quizContainer.classList.add('hidden');
+                scoreContainer.classList.remove('hidden');
+                scoreTextElement.textContent = `Parabéns! Você respondeu todas as questões corretamente!`;
+                scoreBar.style.width = `100%`;
+            }
+
+            nextQuestionBtn.addEventListener('click', () => {
+                if (lastAnswerWasCorrect) {
+                    shuffledQuizData.shift();
+                } else {
+                    const failedQuestion = shuffledQuizData.shift();
+                    shuffledQuizData.push(failedQuestion);
+                }
+
+                if (shuffledQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    showScore();
+                }
+            });
+            
+            restartQuizBtn.addEventListener('click', startQuiz);
+
+            createAccordion();
+            switchView('learn');
+        });
+    </script>
+</body>
+</html>
